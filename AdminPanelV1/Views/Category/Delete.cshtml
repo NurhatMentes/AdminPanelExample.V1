@@ -1,0 +1,55 @@
+﻿@model AdminPanelV1.Models.Category
+
+@{
+    ViewBag.Title = "Kategori";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>Silmek istediğinize emin misiniz?</h3>
+<div class="card alert-danger">
+    <div class="card-body">
+
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CategoryName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ImgUrl)
+            </dt>
+
+            <dd>
+                <img src="@Model.ImgUrl" width="300" height="200" />
+            </dd>
+
+           
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div style="color:red">
+                @ViewBag.Danger
+            </div>
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Sil" class="btn btn-danger" /> |
+                @Html.ActionLink("Geri Dön", "Index")
+            </div>
+        }
+    </div>
+</div>

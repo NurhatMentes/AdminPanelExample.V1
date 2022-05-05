@@ -1,0 +1,106 @@
+﻿@model AdminPanelV1.Models.Admin
+
+@{
+    ViewBag.Title = "Profil Düzenle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "AdminProfil", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.AdminId)
+    @Html.HiddenFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-4">
+
+                <div class="card">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                        <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
+                        <h2>@Session["FullName"]</h2>
+                        <h3>@Session["Auth"]</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-8">
+
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-overview"> <a href="/AdminProfil/">Genel Bakış</a></button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit"><a href="/AdminProfil/Edit/@Session["adminid"]"> Profili Düzenle</a></button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit"><a href="/AdminProfil/PasswordPartial/@Session["adminid"]"> Şİfreyi Değiştir</a></button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content pt-2">
+
+
+
+                            <div>
+
+                                <form method="post" enctype="multipart/form-data" action="/AdminProfil">
+
+                                    <div class="row mb-3">
+                                        <label for="fullName" class="col-md-4 col-lg-3 col-form-label">İsim</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="fullName" type="text" class="form-control" id="fullName" value="@Model.FullName">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="job" class="col-md-4 col-lg-3 col-form-label">İş</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="job" type="text" class="form-control" id="job" value="@Model.Job">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="Job" class="col-md-4 col-lg-3 col-form-label">E Posta </label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Email" type="email" class="form-control" id="Email" value="@Model.Email">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="Auth" class="col-md-4 col-lg-3 col-form-label">Yetki Seviyesi </label>
+                                        <div class="col-md-8 col-lg-9">
+                                            @Html.EditorFor(model => model.Auth, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                                            @Html.ValidationMessageFor(model => model.Auth, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="Country" class="col-md-4 col-lg-3 col-form-label">Telefon</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Phone" type="text" class="form-control" id="Phone" value="@Model.Phone">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Güncelle</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+}

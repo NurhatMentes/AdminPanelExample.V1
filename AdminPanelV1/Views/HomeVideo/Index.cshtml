@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AdminPanelV1.Models.HomeVideo>
+
+@{
+    ViewBag.Title = "Ansayfa Video";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" style="float: left">Video</h5>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.VideoUrl)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <video width="320" height="240" controls autoplay="" mute loop>
+                            <source src="@item.VideoUrl" type="video/mp4">
+
+                        </video>
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Düzenle", "Edit", new { id = item.HomeVideoId })
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+    </div>
+</div>

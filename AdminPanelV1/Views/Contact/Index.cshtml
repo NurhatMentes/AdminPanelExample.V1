@@ -1,0 +1,77 @@
+﻿@model IEnumerable<AdminPanelV1.Models.Contact>
+
+
+@{
+    ViewBag.Title = "İletişim";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" style="float: left">İletişim</h5>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Adress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailPassword)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Whatsapp)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Facebook)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Twitter)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Instagram)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Adress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailPassword)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Whatsapp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Facebook)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Twitter)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Instagram)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Düzenle", "Edit", new { id = item.ContactId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

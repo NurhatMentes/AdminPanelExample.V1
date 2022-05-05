@@ -1,0 +1,66 @@
+﻿@model AdminPanelV1.Models.Comment
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h3>Silmek istediğinize emin misiniz?</h3>
+<div class="card alert-danger">
+    <div class="card-body">
+        <h4 class="card-title">Kategori</h4>
+        <dlv class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Blog.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Blog.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstLastName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FirstLastName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CommentContent)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CommentContent)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Confirmation)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Confirmation)
+            </dd>
+
+        </dlv>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Sil" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

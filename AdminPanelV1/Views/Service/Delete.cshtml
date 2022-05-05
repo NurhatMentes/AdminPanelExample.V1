@@ -1,0 +1,41 @@
+﻿@model AdminPanelV1.Models.Service
+
+@{
+    ViewBag.Title = "Hizmetler";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Silmek istediğinize emin misiniz?</h3>
+<div class="card alert-danger">
+<div class="card-body">
+    <div>
+
+        <hr />
+        <dl class="dl-horizontal">
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.Raw(Model.Title)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div style="color:red">
+                @ViewBag.Danger
+            </div>
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Sil" class="btn btn-danger" /> |
+                @Html.ActionLink("Geri Dön", "Index")
+            </div>
+        }
+    </div>
+</div>

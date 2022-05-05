@@ -1,0 +1,75 @@
+﻿@model AdminPanelV1.Models.Comment
+
+@{
+    ViewBag.Title = "Yorum Onay";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Ürün Yorumları - Onaylama</h5>
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.CommentId)
+
+                <div class="form-group">
+                    <b> @Html.LabelFor(model => model.FirstLastName, htmlAttributes: new { @class = "control-label col-md-2", @style = "display: none" })</b>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FirstLastName, new { htmlAttributes = new { @class = "form-control", @style = "display: none" } })
+                        @Html.ValidationMessageFor(model => model.FirstLastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1%">
+                    <b> @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2", @style = "display: none" })</b>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "display: none" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1%">
+                    <b> @Html.LabelFor(model => model.CommentContent, htmlAttributes: new { @class = "control-label col-md-2", @style = "display: none" })</b>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CommentContent, new { htmlAttributes = new { @class = "form-control", @style = "display: none" } })
+                        @Html.ValidationMessageFor(model => model.CommentContent, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1%">
+                    <b>Yorumu Onayla </b>
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.Confirmation)
+                            @Html.ValidationMessageFor(model => model.Confirmation, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1%">
+                    <b> @Html.LabelFor(model => model.BlogId, "BlogId", htmlAttributes: new { @class = "control-label col-md-2", @style = "display: none" })</b>
+                    <div class="col-md-10">
+                        @Html.DropDownList("ProductId", null, htmlAttributes: new { @class = "form-control", @style = "display: none" })
+
+                        @Html.ValidationMessageFor(model => model.BlogId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1%">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Onayla" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>}
+
+<div>
+    @Html.ActionLink("Geri Dön", "Index")
+</div>

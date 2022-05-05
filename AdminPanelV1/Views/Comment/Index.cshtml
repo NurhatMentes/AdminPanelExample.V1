@@ -1,0 +1,74 @@
+﻿@model IEnumerable<AdminPanelV1.Models.Comment>
+
+@{
+    ViewBag.Title = "Yorumlar";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable(
+            {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Turkish.json"
+                }
+            });
+    });
+</script>
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Ürün Yorumları</h5>
+
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        Blog
+                    </th>
+                    <th>
+                        Yorum Yapan
+                    </th>
+                    <th>
+                        EPosta
+                    </th>
+                    <th>
+                        Yorum İçeriği
+                    </th>
+                    <th>
+                        Onay Durumu
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Blog.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstLastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CommentContent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Confirmation)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Durmu Güncelle", "Edit", new { id = item.CommentId })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

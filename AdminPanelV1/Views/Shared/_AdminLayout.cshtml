@@ -1,0 +1,339 @@
+﻿
+@{
+    if (Session["adminid"] == null)
+    {
+        Response.Redirect("/Admin/Login");
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Admin Paneli</title>
+    <link href="../../../Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../../../Content/AdminLayout/assets/img/favicon.png" rel="icon">
+    <link href="../../../Content/AdminLayout/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    @*<link href="../../Content/AdminLayout/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">*@
+    <link href="../../../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../Content/AdminLayout/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../../Content/AdminLayout/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../../../Content/AdminLayout/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="../../../Content/AdminLayout/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="../../../Content/AdminLayout/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../../../Content/AdminLayout/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="../../../Content/AdminLayout/assets/css/style.css" rel="stylesheet">
+
+
+    <!-- =======================================================
+    * Template Name: NiceAdmin - v2.2.0
+    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+
+    <script src="../../../Scripts/jquery-3.6.0.js"></script>
+    <link href="../../../Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="../../../Scripts/DataTables/jquery.dataTables.js"></script>
+    <link href="../../../Content/DataTables/css/dataTables.bootstrap4.css" rel="stylesheet" />
+    <script src="../../../Scripts/DataTables/dataTables.bootstrap4.js"></script>
+
+    <script src="../../../Content/ckeditor/ckeditor.js"></script>
+    <link href="../../../Content/ckeditor/contents.css" rel="stylesheet" />
+
+    <script src="../../../Scripts/jquery.validate.min.js"></script>
+    <script src="../../../Scripts/jquery.validate.unobtrusive.js"></script>
+</head>
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="/Admin" class="logo d-flex align-items-center">
+                <img src="../../../Content/AdminLayout/assets/img/logo.png" alt="">
+                <span class="d-none d-lg-block">StarWork-IT</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+
+
+
+                @{
+                    Html.RenderAction("CommentPartial", "Admin");
+                }
+
+                <!-- End Notification Nav -->
+
+                <!--<li class="nav-item dropdown">
+
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span class="badge bg-success badge-number">3</span>
+                    </a>--><!-- End Messages Icon -->
+
+                    <!--<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                        <li class="dropdown-header">
+                            You have 3 new messages
+                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="/Content/AdminLayout/assets/img/messages-1.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>Maria Hudson</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>4 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="/Content/AdminLayout/assets/img/messages-2.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>Anna Nelson</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>6 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="/Content/AdminLayout/assets/img/messages-3.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>David Muldon</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>8 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="dropdown-footer">
+                            <a href="#">Show all messages</a>
+                        </li>
+
+                    </ul>--><!-- End Messages Dropdown Items -->
+
+                <!--</li>--><!-- End Messages Nav -->
+
+                <li class="nav-item dropdown pe-3">
+
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
+                        <span class="d-none d-md-block dropdown-toggle ps-2">@Session["FullName"]</span>
+                    </a><!-- End Profile Iamge Icon -->
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                        <li class="dropdown-header">
+                            <h6>@Session["email"]</h6>
+                            <span>@Session["Auth"]</span>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            @{
+                                if (Session["Auth"].ToString() == "Admin")
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" href="/Admin/Admins/">
+                                        <i class="bi bi-file-person-fill"></i>
+                                        <span>Yöneticiler</span>
+                                    </a>
+                                }
+                            }
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/AdminProfil/">
+                                    <i class="bi bi-person"></i>
+                                    <span>Profilim</span>
+                                </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/Admin/Logout/">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Çıkış Yap</span>
+                            </a>
+                        </li>
+
+                    </ul><!-- End Profile Dropdown Items -->
+                </li><!-- End Profile Nav -->
+
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="/Admin">
+                    <i class="bi bi-grid"></i>
+                    <span>Kontrol Paneli</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+            @{
+                if (Session["Auth"].ToString() == "Admin")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link " href="/SiteIdentity/">
+                            <i class="bi bi-grid"></i>
+                            <span>Site Kimlik</span>
+                        </a>
+                    </li><!-- End SiteIdentity Nav -->
+                }
+
+
+                if (Session["Auth"].ToString() == "Admin" || Session["Auth"].ToString() == "Editör")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link " href="/Contact/">
+                            <i class="bi bi-grid"></i>
+                            <span>İletişim</span>
+                        </a>
+                    </li><!-- End Contact Nav -->
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="/AboutUs/">
+                            <i class="bi bi-grid"></i>
+                            <span>Hakkımızda</span>
+                        </a>
+                    </li><!-- End AboutUs Nav -->
+                    <li class="nav-item" id="Service">
+                        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" id="Service">
+                            <i class="bi bi-journal-text"></i><span>Hizmetler</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                            <li>
+                                <a href="/Service/">
+                                    <i class="bi bi-circle"></i><span>Hizmetler</span>
+                                </a>                     
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- End Service Nav -->
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="/HomeVideo/">
+                            <i class="bi bi-grid"></i>
+                            <span>Ana Video</span>
+                        </a>
+                    </li><!-- End Service Nav -->
+                }
+
+                if (Session["Auth"].ToString() == "Admin" || Session["Auth"].ToString() == "Editör" || Session["Auth"].ToString() == "Yazar")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-journal-text"></i><span>Ürün Kayıtları</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                            <li>
+                                <a href="/Category/">
+                                    <i class="bi bi-circle"></i><span>Kategoriler</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/SubCategory/">
+                                    <i class="bi bi-circle"></i><span>Alt Kategoriler</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Product/">
+                                    <i class="bi bi-circle"></i><span>Ürünler</span>
+                                </a>
+                                <a href="/Comment/">
+                                    <i class="bi bi-circle"></i><span>Ürün Yorumları</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li><!-- End Blog - Category -->
+                }
+            }
+
+        </ul>
+
+    </aside><!-- End Sidebar-->
+
+
+    <main id="main" style="margin-top: 0; padding: 0">
+        <section>
+            @RenderBody()
+        </section>
+
+    </main>
+
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            &copy; Copyright <strong><span>StarWork-IT</span></strong>. Tüm Hakları Saklıdır
+        </div>
+    </footer><!-- End Footer -->
+
+
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="../../../Content/AdminLayout/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    @*<script src="../../Content/AdminLayout/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>*@
+    <script src="../../../Scripts/bootstrap.bundle.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/chart.js/chart.min.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/quill/quill.min.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="../../../Content/AdminLayout/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../../../Content/AdminLayout/assets/js/main.js"></script>
+
+</body>
+</html>

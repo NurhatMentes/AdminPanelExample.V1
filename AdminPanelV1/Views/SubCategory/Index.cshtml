@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AdminPanelV1.Models.SubCategory>
+
+@{
+    ViewBag.Title = "Alt Kategori";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" style="float: left">Alt Kategoriler</h5>
+        <a class="btn btn-outline-success" href="/SubCategory/Create" style="margin-left: 5%; margin-top: 1%">Yeni Ekle</a>
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubCategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ImgUrl)
+                </th>
+                <th>
+                    Ana Kategori
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubCategoryName)
+                    </td>
+                    <td>
+                        <img src="@item.ImgUrl" width="300" height="200" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Düzenle", "Edit", new { id = item.SubCategoryId }) |
+                        @Html.ActionLink("Sil", "Delete", new { id = item.SubCategoryId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
