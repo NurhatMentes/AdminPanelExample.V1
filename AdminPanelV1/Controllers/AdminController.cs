@@ -19,17 +19,29 @@ namespace AdminPanelV1.Controllers
         // GET: Admins
         public ActionResult Index()
         {
-            var adminId = (int)Session["adminid"];
-            var adminName = Session["FullName"];
+            var userCookie = Request.Cookies["userCookie"];
+            var userCookie2 = Request.Cookies["userCookie2"];
 
-            ViewBag.CommentConf = db.Comment.Where(x => x.Confirmation == false).Count();
-            ViewBag.Comment = db.Comment.Where(x => x.Confirmation == false).ToList();
-            ViewBag.Blog = db.Blog.Count();
-            ViewBag.Service = db.Service.Count();
-            ViewBag.Category = db.Category.Count();
-            ViewBag.CommentNumber = db.Comment.Count();
-            ViewBag.RecentlyAdminName=db.Admin.Where(x=>x.FullName == adminName).ToList();
-            ViewBag.RecentlyLoginDate = db.AdminLog.Where(x=>x.AdminId == adminId).ToList();
+           
+            if (Request.Cookies["userCookie"] != null)
+            {
+                var adminId = Convert.ToInt16(userCookie["AdminId"]);
+                var adminName = userCookie["FullName"];
+
+
+                ViewBag.CommentConf = db.Comment.Where(x => x.Confirmation == false).Count();
+                ViewBag.Comment = db.Comment.Where(x => x.Confirmation == false).ToList();
+                ViewBag.Blog = db.Blog.Count();
+                ViewBag.Service = db.Service.Count();
+                ViewBag.Category = db.Category.Count();
+                ViewBag.CommentNumber = db.Comment.Count();
+                ViewBag.RecentlyAdminName = db.Admin.Where(x => x.FullName == adminName).ToList();
+                ViewBag.RecentlyLoginDate = db.AdminLog.Where(x => x.AdminId == adminId).ToList();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Admin");
+            }
 
             var categoryList = db.Category.ToList();
             return View(categoryList);
@@ -43,6 +55,12 @@ namespace AdminPanelV1.Controllers
         [HttpPost]
         public ActionResult Login(Admin admin, string password)
         {
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            userCookie.Expires = DateTime.Now.AddMinutes(30);
+            HttpCookie userCookie2 = new HttpCookie("userCookie2");
+            userCookie2.Expires = DateTime.Now.AddMinutes(30);
+
+
             var md5pass = Crypto.Hash(password, "MD5");
             var login = db.Admin.Where(x => x.Email == admin.Email || x.Password == admin.Password).FirstOrDefault();
 
@@ -52,43 +70,50 @@ namespace AdminPanelV1.Controllers
             {
                 if (login.Password == md5pass && login.Email == admin.Email)
                 {
-                    Session["adminid"] = login.AdminId;
-                    Session["email"] = login.Email;
-                    Session["Auth"] = login.Auth;
-                    Session["FullName"] = login.FullName;
-                    Session["Job"] = login.Job;
-                    Session["Phone"] = login.Phone;
-                    Session["OldPassword"] = login.RePassword;
+                    userCookie2["adminid"] = login.AdminId.ToString();
+                    userCookie["adminid"] = login.AdminId.ToString();
+                    userCookie["email"] = login.Email;
+                    userCookie["Auth"] = login.Auth;
+                    userCookie["FullName"] = login.FullName;
+                    userCookie["Job"] = login.Job;
+                    userCookie["Phone"] = login.Phone;
+                    userCookie["OldPassword"] = login.RePassword;
+
 
                     adminLog.AdminId = login.AdminId;
-                    adminLog.State = "Giriş Yapıldı";    
-                    adminLog.LogDate=DateTime.Now;;
+                    adminLog.State = "Giriş Yapıldı";
+                    adminLog.LogDate = DateTime.Now; ;
                     db.AdminLog.Add(adminLog);
                     db.SaveChanges();
+
+                    Response.Cookies.Add(userCookie);
+                    Response.Cookies.Add(userCookie2);
 
                     return RedirectToAction("Index", "Admin");
                 }
             }
-
             ViewBag.Danger = "E-posta veya Şifre hatalı";
             return View(admin);
         }
 
         public ActionResult Logout()
         {
+            var userCookie1 = Request.Cookies["userCookie"];
+
             AdminLog adminLog = new AdminLog();
-            adminLog.AdminId = (int)Session["adminid"];
+            adminLog.AdminId = Convert.ToInt16(userCookie1["AdminId"]);
             adminLog.State = "Çıkış Yapıldı";
             adminLog.LogDate = DateTime.Now; ;
             db.AdminLog.Add(adminLog);
             db.SaveChanges();
 
-            Session["adminid"] = null;
-            Session["email"] = null;
-            Session["Auth"] = null;
-            Session.Abandon();
 
-           
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            Request.Cookies.Remove(userCookie.ToString());
+
+            HttpCookie userCookie2 = new HttpCookie("userCookie2");
+            Request.Cookies.Remove(userCookie2.ToString());
+
             return RedirectToAction("Login", "Admin");
         }
 

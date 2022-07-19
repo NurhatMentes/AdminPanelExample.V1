@@ -1,9 +1,10 @@
-﻿
-@{
-    if (Session["adminid"] == null)
+﻿@{
+    var userCookie = Request.Cookies["userCookie"];
+    if (Request.Cookies["userCookie"] == null)
     {
         Response.Redirect("/Admin/Login");
     }
+
 }
 
 <!DOCTYPE html>
@@ -84,91 +85,84 @@
                 }
 
                 <!-- End Notification Nav -->
-
                 <!--<li class="nav-item dropdown">
-
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="badge bg-success badge-number">3</span>
-                    </a>--><!-- End Messages Icon -->
-
-                    <!--<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                        <li class="dropdown-header">
-                            You have 3 new messages
-                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="message-item">
-                            <a href="#">
-                                <img src="/Content/AdminLayout/assets/img/messages-1.jpg" alt="" class="rounded-circle">
-                                <div>
-                                    <h4>Maria Hudson</h4>
-                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                    <p>4 hrs. ago</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="message-item">
-                            <a href="#">
-                                <img src="/Content/AdminLayout/assets/img/messages-2.jpg" alt="" class="rounded-circle">
-                                <div>
-                                    <h4>Anna Nelson</h4>
-                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                    <p>6 hrs. ago</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="message-item">
-                            <a href="#">
-                                <img src="/Content/AdminLayout/assets/img/messages-3.jpg" alt="" class="rounded-circle">
-                                <div>
-                                    <h4>David Muldon</h4>
-                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                    <p>8 hrs. ago</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="dropdown-footer">
-                            <a href="#">Show all messages</a>
-                        </li>
-
-                    </ul>--><!-- End Messages Dropdown Items -->
-
+                    </a>-->
+                <!-- End Messages Icon -->
+                <!--<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    <li class="dropdown-header">
+                        You have 3 new messages
+                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="message-item">
+                        <a href="#">
+                            <img src="/Content/AdminLayout/assets/img/messages-1.jpg" alt="" class="rounded-circle">
+                            <div>
+                                <h4>Maria Hudson</h4>
+                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                <p>4 hrs. ago</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="message-item">
+                        <a href="#">
+                            <img src="/Content/AdminLayout/assets/img/messages-2.jpg" alt="" class="rounded-circle">
+                            <div>
+                                <h4>Anna Nelson</h4>
+                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                <p>6 hrs. ago</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="message-item">
+                        <a href="#">
+                            <img src="/Content/AdminLayout/assets/img/messages-3.jpg" alt="" class="rounded-circle">
+                            <div>
+                                <h4>David Muldon</h4>
+                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                <p>8 hrs. ago</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="#">Show all messages</a>
+                    </li>
+                </ul>-->
+                <!-- End Messages Dropdown Items -->
                 <!--</li>--><!-- End Messages Nav -->
 
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">@Session["FullName"]</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2">@userCookie["FullName"]</span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>@Session["email"]</h6>
-                            <span>@Session["Auth"]</span>
+                            <h6>@userCookie["email"]</h6>
+                            <span>@userCookie["Auth"]</span>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
                             @{
-                                if (Session["Auth"].ToString() == "Admin")
+                                if (userCookie["Auth"].ToString() == "Admin")
                                 {
                                     <a class="dropdown-item d-flex align-items-center" href="/Admin/Admins/">
                                         <i class="bi bi-file-person-fill"></i>
@@ -182,10 +176,10 @@
                         </li>
 
                         <li>
-                                <a class="dropdown-item d-flex align-items-center" href="/AdminProfil/">
-                                    <i class="bi bi-person"></i>
-                                    <span>Profilim</span>
-                                </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/AdminProfil/">
+                                <i class="bi bi-person"></i>
+                                <span>Profilim</span>
+                            </a>
                         </li>
 
                         <li>
@@ -218,7 +212,7 @@
                 </a>
             </li><!-- End Dashboard Nav -->
             @{
-                if (Session["Auth"].ToString() == "Admin")
+                if (userCookie["Auth"] == "Admin")
                 {
                     <li class="nav-item">
                         <a class="nav-link " href="/SiteIdentity/">
@@ -229,7 +223,7 @@
                 }
 
 
-                if (Session["Auth"].ToString() == "Admin" || Session["Auth"].ToString() == "Editör")
+                if (userCookie["Auth"] == "Admin" || userCookie["Auth"] == "Editör")
                 {
                     <li class="nav-item">
                         <a class="nav-link " href="/Contact/">
@@ -244,6 +238,18 @@
                             <span>Hakkımızda</span>
                         </a>
                     </li><!-- End AboutUs Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link " href="/Courseriers/">
+                            <i class="bi bi-grid"></i>
+                            <span>Kursiyerler</span>
+                        </a>
+                    </li><!-- End Coursier Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link " href="/CourserierImgs/">
+                            <i class="bi bi-grid"></i>
+                            <span>Kursiyer Fotoğrafları</span>
+                        </a>
+                    </li><!-- End Coursier Nav -->
                     <li class="nav-item" id="Service">
                         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" id="Service">
                             <i class="bi bi-journal-text"></i><span>Hizmetler</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -252,7 +258,10 @@
                             <li>
                                 <a href="/Service/">
                                     <i class="bi bi-circle"></i><span>Hizmetler</span>
-                                </a>                     
+                                </a>
+                                <a href="/SubServices/">
+                                    <i class="bi bi-circle"></i><span>Alt Hizmetler</span>
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -266,7 +275,7 @@
                     </li><!-- End Service Nav -->
                 }
 
-                if (Session["Auth"].ToString() == "Admin" || Session["Auth"].ToString() == "Editör" || Session["Auth"].ToString() == "Yazar")
+                if (userCookie["Auth"] == "Admin" || userCookie["Auth"] == "Editör" || userCookie["Auth"] == "Yazar")
                 {
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
@@ -277,17 +286,15 @@
                                 <a href="/Category/">
                                     <i class="bi bi-circle"></i><span>Kategoriler</span>
                                 </a>
-                            </li>
-                            <li>
                                 <a href="/SubCategory/">
                                     <i class="bi bi-circle"></i><span>Alt Kategoriler</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/Product/">
+                                <a href="/Product/Index">
                                     <i class="bi bi-circle"></i><span>Ürünler</span>
                                 </a>
-                                <a href="/Comment/">
+                                <a href="/Comments/">
                                     <i class="bi bi-circle"></i><span>Ürün Yorumları</span>
                                 </a>
                             </li>
