@@ -131,29 +131,29 @@
                     <h5 class="card-title">Son Aktivetiler </h5>
 
                     @{
-                        foreach (var name in ViewBag.RecentlyAdminName)
-                        {
-                            foreach (var date in ViewBag.RecentlyLoginDate)
-                            {
-                                <div class="activity">
 
-                                    <div class="activity-item d-flex">
-                                        <div class="activite-label">@date.LogDate</div>
-                                        @if (@date.State=="Giriş Yapıldı")
-                                        {
-                                            <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                                        }
-                                        else
-                                        {
-                                            <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                                        }
-                                        <div class="activity-content">
-                                            @name.FullName <a href="#" class="fw-bold text-dark">@date.State</a>
-                                        </div>
-                                    </div><!-- End activity item-->
-                                </div>
-                            }
+
+                        foreach (var date in ViewBag.LoginDate)
+                        {
+                            <div class="activity ">
+
+                                <div class="activity-item d-flex">
+                                    <div class="activite-label">@date.LogDate</div>
+                                    @if (@date.State == "Giriş Yapıldı")
+                                    {
+                                        <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                                    }
+                                    else
+                                    {
+                                        <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                                    }
+                                    <div class="activity-content">
+                                        @date.Admin.FullName <a href="#" class="fw-bold text-dark">@date.State</a>
+                                    </div>
+                                </div><!-- End activity item-->
+                            </div>
                         }
+
                     }
 
                 </div>

@@ -28,15 +28,14 @@ namespace AdminPanelV1.Controllers
                 var adminId = Convert.ToInt16(userCookie["AdminId"]);
                 var adminName = userCookie["FullName"];
 
-
                 ViewBag.CommentConf = db.Comment.Where(x => x.Confirmation == false).Count();
                 ViewBag.Comment = db.Comment.Where(x => x.Confirmation == false).ToList();
                 ViewBag.Blog = db.Blog.Count();
                 ViewBag.Service = db.Service.Count();
                 ViewBag.Category = db.Category.Count();
                 ViewBag.CommentNumber = db.Comment.Count();
-                ViewBag.RecentlyAdminName = db.Admin.Where(x => x.FullName == adminName).ToList();
-                ViewBag.RecentlyLoginDate = db.AdminLog.Where(x => x.AdminId == adminId).ToList();
+                ViewBag.AdminName = db.Admin.ToList();
+                ViewBag.LoginDate = db.AdminLog.OrderByDescending(x => x.AdminLogId);
             }
             else
             {
@@ -62,7 +61,7 @@ namespace AdminPanelV1.Controllers
 
 
             var md5pass = Crypto.Hash(password, "MD5");
-            var login = db.Admin.Where(x => x.Email == admin.Email || x.Password == admin.Password).FirstOrDefault();
+            var login = db.Admin.Where(x => x.Email == admin.Email && x.Password == md5pass).FirstOrDefault();
 
             AdminLog adminLog = new AdminLog();
 
@@ -99,6 +98,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Logout()
         {
             var userCookie1 = Request.Cookies["userCookie"];
+            var userCookie2 = Request.Cookies["userCookie2"];
 
             AdminLog adminLog = new AdminLog();
             adminLog.AdminId = Convert.ToInt16(userCookie1["AdminId"]);
@@ -107,11 +107,7 @@ namespace AdminPanelV1.Controllers
             db.AdminLog.Add(adminLog);
             db.SaveChanges();
 
-
-            HttpCookie userCookie = new HttpCookie("userCookie");
-            Request.Cookies.Remove(userCookie.ToString());
-
-            HttpCookie userCookie2 = new HttpCookie("userCookie2");
+            Request.Cookies.Remove(userCookie1.ToString());
             Request.Cookies.Remove(userCookie2.ToString());
 
             return RedirectToAction("Login", "Admin");
@@ -142,13 +138,21 @@ namespace AdminPanelV1.Controllers
                 user.RePassword = Crypto.Hash(newPassword, "MD5");
                 db.SaveChanges();
 
-                WebMail.SmtpServer = "smtp.gmail.com";
-                WebMail.EnableSsl = true;
-                WebMail.UserName = ePosta;
-                WebMail.Password = password;
-                WebMail.SmtpPort = 587;
-                WebMail.Send(email, "Yönetim paneline yeni giriş şifreniz", "Şifrenizi değiştirmeyi unutmayınız!" + "<br/>" + "<strong/>" + "Şifreniz: " + newPassword);
-                ViewBag.Danger = "Yeni Şifreniz gönderilmiştir.";
+                try
+                {
+                    WebMail.SmtpServer = "smtp.gmail.com";
+                    WebMail.EnableSsl = true;
+                    WebMail.UserName = ePosta;
+                    WebMail.Password = password;
+                    WebMail.SmtpPort = 587;
+                    WebMail.Send(email, "Yönetim paneline yeni giriş şifreniz", "Şifrenizi değiştirmeyi unutmayınız!" + "<br/>" + "<strong/>" + "Şifreniz: " + newPassword);
+                    ViewBag.Danger = "Yeni Şifreniz gönderilmiştir.";
+                }
+                catch (Exception ex)
+                {
+
+                    ViewBag.Danger = ex.Message;
+                }
             }
             else
             {
