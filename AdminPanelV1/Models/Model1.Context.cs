@@ -27,17 +27,17 @@ namespace AdminPanelV1.Models
     
         public virtual DbSet<AboutUs> AboutUs { get; set; }
         public virtual DbSet<Admin> Admin { get; set; }
+        public virtual DbSet<AdminLog> AdminLog { get; set; }
+        public virtual DbSet<Blog> Blog { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<Contact> Contact { get; set; }
         public virtual DbSet<HomeVideo> HomeVideo { get; set; }
         public virtual DbSet<Service> Service { get; set; }
         public virtual DbSet<SiteIdentity> SiteIdentity { get; set; }
         public virtual DbSet<Slider> Slider { get; set; }
-        public virtual DbSet<SystemAdmin> SystemAdmin { get; set; }
-        public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<Comment> Comment { get; set; }
-        public virtual DbSet<Blog> Blog { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<SubCategory> SubCategory { get; set; }
-        public virtual DbSet<AdminLog> AdminLog { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<SystemAdmin> SystemAdmin { get; set; }
     }
 }

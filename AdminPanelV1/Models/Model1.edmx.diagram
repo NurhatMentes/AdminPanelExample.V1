@@ -4,24 +4,26 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7d75cb2ba8f847158b8966c59adacae7" Name="Diagram1">
-        <EntityTypeShape EntityType="AdminV1Model.AboutUs" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Admin" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Contact" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.HomeVideo" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Service" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.SiteIdentity" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Slider" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.SystemAdmin" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Category" Width="1.5" PointX="0.75" PointY="7.75" />
-        <EntityTypeShape EntityType="AdminV1Model.Comment" Width="1.5" PointX="2.75" PointY="7.75" />
-        <EntityTypeShape EntityType="AdminV1Model.Blog" Width="1.5" PointX="0.75" PointY="10.875" />
-        <EntityTypeShape EntityType="AdminV1Model.sysdiagrams" Width="1.5" PointX="5.625" PointY="7.75" />
-        <AssociationConnector Association="AdminV1Model.FK_Comment_Blog" />
-        <EntityTypeShape EntityType="AdminV1Model.SubCategory" Width="1.5" PointX="3.5" PointY="11.5" />
-        <AssociationConnector Association="AdminV1Model.FK_SubCategory_Category" />
-        <EntityTypeShape EntityType="AdminV1Model.AdminLog" Width="1.5" PointX="5" PointY="14.375" />
-        <AssociationConnector Association="AdminV1Model.FK_AdminLog_Admin" />
+      <Diagram DiagramId="0742f32b4bca46a39996161d6da47abb" Name="Diagram1">
+        <EntityTypeShape EntityType="AdminV1Model.AboutUs" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Admin" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.AdminLog" Width="1.5" PointX="8" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Blog" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Category" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Comment" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Contact" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.HomeVideo" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Service" Width="1.5" PointX="4.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.SiteIdentity" Width="1.5" PointX="6.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Slider" Width="1.5" PointX="8.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.SubCategory" Width="1.5" PointX="2.875" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.sysdiagrams" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.SystemAdmin" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="AdminV1Model.FK_AdminLog_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="AdminV1Model.FK_Blog_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="AdminV1Model.FK_Comment_Blog" ManuallyRouted="false" />
+        <AssociationConnector Association="AdminV1Model.FK_SubCategory_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="AdminV1Model.FK_Blog_SubCategory" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

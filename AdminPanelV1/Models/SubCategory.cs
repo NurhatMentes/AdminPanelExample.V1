@@ -14,11 +14,19 @@ namespace AdminPanelV1.Models
     
     public partial class SubCategory
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public SubCategory()
+        {
+            this.Blog = new HashSet<Blog>();
+        }
+    
         public int SubCategoryId { get; set; }
         public Nullable<int> CategoryId { get; set; }
         public string SubCategoryName { get; set; }
         public string ImgUrl { get; set; }
     
         public virtual Category Category { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Blog> Blog { get; set; }
     }
 }

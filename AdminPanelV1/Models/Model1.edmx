@@ -39,7 +39,8 @@
             <PropertyRef Name="BlogId" />
           </Key>
           <Property Name="BlogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CategoryId" Type="int" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="SubCategoryId" Type="int" />
           <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
@@ -155,6 +156,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Blog_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Blog">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Blog_SubCategory">
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="0..1" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubCategory">
+              <PropertyRef Name="SubCategoryId" />
+            </Principal>
+            <Dependent Role="Blog">
+              <PropertyRef Name="SubCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Comment_Blog">
           <End Role="Blog" Type="Self.Blog" Multiplicity="1" />
           <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
@@ -198,6 +223,14 @@
             <End Role="Admin" EntitySet="Admin" />
             <End Role="AdminLog" EntitySet="AdminLog" />
           </AssociationSet>
+          <AssociationSet Name="FK_Blog_Category" Association="Self.FK_Blog_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Blog" EntitySet="Blog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Blog_SubCategory" Association="Self.FK_Blog_SubCategory">
+            <End Role="SubCategory" EntitySet="SubCategory" />
+            <End Role="Blog" EntitySet="Blog" />
+          </AssociationSet>
           <AssociationSet Name="FK_Comment_Blog" Association="Self.FK_Comment_Blog">
             <End Role="Blog" EntitySet="Blog" />
             <End Role="Comment" EntitySet="Comment" />
@@ -230,7 +263,54 @@
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RePassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Auth" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="AdminLog" Relationship="AdminV1Model.FK_AdminLog_Admin" FromRole="Admin" ToRole="AdminLog" />
+          <NavigationProperty Name="AdminLog" Relationship="Self.FK_AdminLog_Admin" FromRole="Admin" ToRole="AdminLog" />
+        </EntityType>
+        <EntityType Name="AdminLog">
+          <Key>
+            <PropertyRef Name="AdminLogId" />
+          </Key>
+          <Property Name="AdminLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminId" Type="Int32" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LogDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Admin" Relationship="Self.FK_AdminLog_Admin" FromRole="AdminLog" ToRole="Admin" />
+        </EntityType>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="BlogId" />
+          </Key>
+          <Property Name="BlogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="SubCategoryId" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Blog_Category" FromRole="Blog" ToRole="Category" />
+          <NavigationProperty Name="Comment" Relationship="Self.FK_Comment_Blog" FromRole="Blog" ToRole="Comment" />
+          <NavigationProperty Name="SubCategory" Relationship="AdminV1Model.FK_Blog_SubCategory" FromRole="Blog" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Blog" Relationship="Self.FK_Blog_Category" FromRole="Category" ToRole="Blog" />
+          <NavigationProperty Name="SubCategory" Relationship="Self.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlogId" Type="Int32" Nullable="false" />
+          <Property Name="FirstLastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommentContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Confirmation" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Blog" Relationship="Self.FK_Comment_Blog" FromRole="Comment" ToRole="Blog" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -284,6 +364,27 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="SubCategory">
+          <Key>
+            <PropertyRef Name="SubCategoryId" />
+          </Key>
+          <Property Name="SubCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" />
+          <Property Name="SubCategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
+          <NavigationProperty Name="Blog" Relationship="AdminV1Model.FK_Blog_SubCategory" FromRole="SubCategory" ToRole="Blog" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
         <EntityType Name="SystemAdmin">
           <Key>
             <PropertyRef Name="Id" />
@@ -292,80 +393,33 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="AdminV1" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="AboutUs" EntityType="Self.AboutUs" />
-          <EntitySet Name="Admin" EntityType="Self.Admin" />
-          <EntitySet Name="Contact" EntityType="Self.Contact" />
-          <EntitySet Name="HomeVideo" EntityType="Self.HomeVideo" />
-          <EntitySet Name="Service" EntityType="Self.Service" />
-          <EntitySet Name="SiteIdentity" EntityType="Self.SiteIdentity" />
-          <EntitySet Name="Slider" EntityType="Self.Slider" />
-          <EntitySet Name="SystemAdmin" EntityType="Self.SystemAdmin" />
-          <EntitySet Name="Category" EntityType="AdminV1Model.Category" />
-          <EntitySet Name="Comment" EntityType="AdminV1Model.Comment" />
-          <EntitySet Name="Blog" EntityType="AdminV1Model.Blog" />
-          <EntitySet Name="sysdiagrams" EntityType="AdminV1Model.sysdiagrams" />
-          <AssociationSet Name="FK_Comment_Blog" Association="AdminV1Model.FK_Comment_Blog">
-            <End Role="Blog" EntitySet="Blog" />
-            <End Role="Comment" EntitySet="Comment" />
-          </AssociationSet>
-          <EntitySet Name="SubCategory" EntityType="AdminV1Model.SubCategory" />
-          <AssociationSet Name="FK_SubCategory_Category" Association="AdminV1Model.FK_SubCategory_Category">
-            <End Role="Category" EntitySet="Category" />
-            <End Role="SubCategory" EntitySet="SubCategory" />
-          </AssociationSet>
-          <EntitySet Name="AdminLog" EntityType="AdminV1Model.AdminLog" />
-          <AssociationSet Name="FK_AdminLog_Admin" Association="AdminV1Model.FK_AdminLog_Admin">
-            <End Role="Admin" EntitySet="Admin" />
-            <End Role="AdminLog" EntitySet="AdminLog" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="CategoryId" />
-          </Key>
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SubCategory" Relationship="AdminV1Model.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
-        </EntityType>
-        <EntityType Name="Comment">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BlogId" Type="Int32" Nullable="false" />
-          <Property Name="FirstLastName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Confirmation" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Blog" Relationship="AdminV1Model.FK_Comment_Blog" FromRole="Comment" ToRole="Blog" />
-        </EntityType>
-        <EntityType Name="Blog">
-          <Key>
-            <PropertyRef Name="BlogId" />
-          </Key>
-          <Property Name="BlogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryId" Type="Int32" />
-          <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ImgUrl" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Comment" Relationship="AdminV1Model.FK_Comment_Blog" FromRole="Blog" ToRole="Comment" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
+        <Association Name="FK_AdminLog_Admin">
+          <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
+          <End Role="AdminLog" Type="Self.AdminLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Admin">
+              <PropertyRef Name="AdminId" />
+            </Principal>
+            <Dependent Role="AdminLog">
+              <PropertyRef Name="AdminId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Blog_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Blog">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Comment_Blog">
-          <End Type="AdminV1Model.Blog" Role="Blog" Multiplicity="1" />
-          <End Type="AdminV1Model.Comment" Role="Comment" Multiplicity="*" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Blog">
               <PropertyRef Name="BlogId" />
@@ -375,19 +429,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="SubCategory">
-          <Key>
-            <PropertyRef Name="SubCategoryId" />
-          </Key>
-          <Property Name="SubCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryId" Type="Int32" />
-          <Property Name="SubCategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Category" Relationship="AdminV1Model.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
-        </EntityType>
         <Association Name="FK_SubCategory_Category">
-          <End Type="AdminV1Model.Category" Role="Category" Multiplicity="0..1" />
-          <End Type="AdminV1Model.SubCategory" Role="SubCategory" Multiplicity="*" />
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
               <PropertyRef Name="CategoryId" />
@@ -397,25 +441,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="AdminLog">
-          <Key>
-            <PropertyRef Name="AdminLogId" />
-          </Key>
-          <Property Name="AdminLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AdminId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Admin" Relationship="AdminV1Model.FK_AdminLog_Admin" FromRole="AdminLog" ToRole="Admin" />
-          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="LogDate" Type="DateTime" Precision="3" />
-        </EntityType>
-        <Association Name="FK_AdminLog_Admin">
-          <End Type="AdminV1Model.Admin" Role="Admin" Multiplicity="1" />
-          <End Type="AdminV1Model.AdminLog" Role="AdminLog" Multiplicity="*" />
+        <EntityContainer Name="AdminV1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AboutUs" EntityType="Self.AboutUs" />
+          <EntitySet Name="Admin" EntityType="Self.Admin" />
+          <EntitySet Name="AdminLog" EntityType="Self.AdminLog" />
+          <EntitySet Name="Blog" EntityType="Self.Blog" />
+          <EntitySet Name="Category" EntityType="Self.Category" />
+          <EntitySet Name="Comment" EntityType="Self.Comment" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" />
+          <EntitySet Name="HomeVideo" EntityType="Self.HomeVideo" />
+          <EntitySet Name="Service" EntityType="Self.Service" />
+          <EntitySet Name="SiteIdentity" EntityType="Self.SiteIdentity" />
+          <EntitySet Name="Slider" EntityType="Self.Slider" />
+          <EntitySet Name="SubCategory" EntityType="Self.SubCategory" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="SystemAdmin" EntityType="Self.SystemAdmin" />
+          <AssociationSet Name="FK_AdminLog_Admin" Association="Self.FK_AdminLog_Admin">
+            <End Role="Admin" EntitySet="Admin" />
+            <End Role="AdminLog" EntitySet="AdminLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Blog_Category" Association="Self.FK_Blog_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Blog" EntitySet="Blog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Blog" Association="Self.FK_Comment_Blog">
+            <End Role="Blog" EntitySet="Blog" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Blog_SubCategory" Association="AdminV1Model.FK_Blog_SubCategory">
+            <End Role="SubCategory" EntitySet="SubCategory" />
+            <End Role="Blog" EntitySet="Blog" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_Blog_SubCategory">
+          <End Type="AdminV1Model.SubCategory" Role="SubCategory" Multiplicity="0..1" />
+          <End Type="AdminV1Model.Blog" Role="Blog" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Admin">
-              <PropertyRef Name="AdminId" />
+            <Principal Role="SubCategory">
+              <PropertyRef Name="SubCategoryId" />
             </Principal>
-            <Dependent Role="AdminLog">
-              <PropertyRef Name="AdminId" />
+            <Dependent Role="Blog">
+              <PropertyRef Name="SubCategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -444,6 +514,50 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="RePassword" ColumnName="RePassword" />
                 <ScalarProperty Name="Auth" ColumnName="Auth" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdminLog">
+            <EntityTypeMapping TypeName="AdminV1Model.AdminLog">
+              <MappingFragment StoreEntitySet="AdminLog">
+                <ScalarProperty Name="AdminLogId" ColumnName="AdminLogId" />
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Blog">
+            <EntityTypeMapping TypeName="AdminV1Model.Blog">
+              <MappingFragment StoreEntitySet="Blog">
+                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="AdminV1Model.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comment">
+            <EntityTypeMapping TypeName="AdminV1Model.Comment">
+              <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
+                <ScalarProperty Name="FirstLastName" ColumnName="FirstLastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
+                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -504,76 +618,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SystemAdmin">
-            <EntityTypeMapping TypeName="AdminV1Model.SystemAdmin">
-              <MappingFragment StoreEntitySet="SystemAdmin">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Category">
-            <EntityTypeMapping TypeName="AdminV1Model.Category">
-              <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+          <EntitySetMapping Name="SubCategory">
+            <EntityTypeMapping TypeName="AdminV1Model.SubCategory">
+              <MappingFragment StoreEntitySet="SubCategory">
+                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Comment">
-            <EntityTypeMapping TypeName="AdminV1Model.Comment">
-              <MappingFragment StoreEntitySet="Comment">
-                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
-                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FirstLastName" ColumnName="FirstLastName" />
-                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
-                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Blog">
-            <EntityTypeMapping TypeName="AdminV1Model.Blog">
-              <MappingFragment StoreEntitySet="Blog">
+                <ScalarProperty Name="SubCategoryName" ColumnName="SubCategoryName" />
                 <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
             <EntityTypeMapping TypeName="AdminV1Model.sysdiagrams">
               <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
                 <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SubCategory">
-            <EntityTypeMapping TypeName="AdminV1Model.SubCategory">
-              <MappingFragment StoreEntitySet="SubCategory">
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="SubCategoryName" ColumnName="SubCategoryName" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AdminLog">
-            <EntityTypeMapping TypeName="AdminV1Model.AdminLog">
-              <MappingFragment StoreEntitySet="AdminLog">
-                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
-                <ScalarProperty Name="AdminLogId" ColumnName="AdminLogId" />
+          <EntitySetMapping Name="SystemAdmin">
+            <EntityTypeMapping TypeName="AdminV1Model.SystemAdmin">
+              <MappingFragment StoreEntitySet="SystemAdmin">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
