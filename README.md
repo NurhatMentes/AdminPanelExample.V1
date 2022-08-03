@@ -143,4 +143,5 @@
         <li>Giriş Çıkış Aktiviteler</li>
     </ul>
 </ol>
+
 ![image](https://user-images.githubusercontent.com/77548161/182669198-6d4afb09-9b94-429d-b91d-46ef80cc3396.png)
