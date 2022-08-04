@@ -116,7 +116,7 @@ namespace AdminPanelV1.Controllers
                 logs.ItemName = videoUpdate.Title;
                 logs.TableName = "HomeVideo";
                 logs.LogDate = DateTime.Now;
-                logs.Process = videoUpdate.Title + "" + "Ana sayfa video" + "" + videoUpdate.EmendatorAdminId + "" + "tarafından güncellendi.";
+                logs.Process = videoUpdate.Title + " " + "Ana sayfa video" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");

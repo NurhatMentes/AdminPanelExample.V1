@@ -76,7 +76,7 @@ namespace AdminPanelV1.Controllers
                     logs.ItemName = cat.CategoryName;
                     logs.TableName = "Categories";
                     logs.LogDate = DateTime.Now;
-                    logs.Process = cat.CategoryName + "" + "kategorisi" + "" + cat.Users.UserId + "" + "tarafından eklendi.";
+                    logs.Process = cat.CategoryName + " " + "kategorisi" + " " + cat.Users.UserId + " " + "tarafından eklendi.";
                     db.TablesLogs.Add(logs);
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -147,7 +147,7 @@ namespace AdminPanelV1.Controllers
                 logs.ItemName = category.CategoryName;
                 logs.TableName = "Categories";
                 logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + "" + "kategorisi" + "" + category.EmendatorAdminId + "" + "tarafından güncellendi.";
+                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -199,7 +199,7 @@ namespace AdminPanelV1.Controllers
                 logs.ItemName = category.CategoryName;
                 logs.TableName = "Categories";
                 logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + "" + "kategorisi" + "" + category.EmendatorAdminId + "" + "tarafından silindi.";
+                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
 

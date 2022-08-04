@@ -52,7 +52,7 @@ namespace AdminPanelV1.Controllers
                 logs.ItemName = contact.Email;
                 logs.TableName = "Contact";
                 logs.LogDate = DateTime.Now;
-                logs.Process = contact.Email + "" + "iletişim bilgisi" + "" + contact.EmendatorAdminId + "" + "tarafından güncellendi.";
+                logs.Process = contact.Email + " " + "iletişim bilgisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 db.SaveChanges();
