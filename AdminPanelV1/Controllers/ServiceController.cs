@@ -17,7 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: Service
         public ActionResult Index()
         {
-            return View(db.Service.ToList());
+            return View(db.Services.ToList());
         }
 
         public ActionResult Create()
@@ -27,7 +27,7 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Create(Service service, HttpPostedFileBase ImgUrl)
+        public ActionResult Create(Services service, HttpPostedFileBase ImgUrl)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +43,7 @@ namespace AdminPanelV1.Controllers
                     service.ImgUrl = "/Uploads/Service/" + imgName;
 
 
-                    db.Service.Add(service);
+                    db.Services.Add(service);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -63,7 +63,7 @@ namespace AdminPanelV1.Controllers
                 ViewBag.Warning = "Güncellenecek hizmet bulunamadı.";
             }
 
-            var service = db.Service.Find(id);
+            var service = db.Services.Find(id);
 
             if (service == null)
             {
@@ -75,11 +75,11 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(int? id, Service service, HttpPostedFileBase ImgUrl)
+        public ActionResult Edit(int? id, Services service, HttpPostedFileBase ImgUrl)
         {
             if (ModelState.IsValid)
             {
-                var serviceId = db.Service.Where(x => x.ServiceId == id).SingleOrDefault();
+                var serviceId = db.Services.Where(x => x.ServiceId == id).SingleOrDefault();
                 if (ImgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(serviceId.ImgUrl)))
@@ -112,7 +112,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Service service = db.Service.Find(id);
+            Services service = db.Services.Find(id);
             if (service == null)
             {
                 return HttpNotFound();
@@ -124,7 +124,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            var service = db.Service.Find(id);
+            var service = db.Services.Find(id);
 
             if (service == null)
             {
@@ -137,7 +137,7 @@ namespace AdminPanelV1.Controllers
             }
 
 
-            db.Service.Remove(service);
+            db.Services.Remove(service);
             db.SaveChanges();
             return RedirectToAction("Index");
 

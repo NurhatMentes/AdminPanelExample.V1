@@ -18,7 +18,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Index()
         {
 
-            var category = db.Category;
+            var category = db.Categories;
             return View(category.ToList());
         }
 
@@ -29,7 +29,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -48,7 +48,7 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Category category, HttpPostedFileBase imgUrl)
+        public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl)
         {
             if (ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace AdminPanelV1.Controllers
                     category.ImgUrl = "/Uploads/Category/" + imgName;
 
 
-                    db.Category.Add(category);
+                    db.Categories.Add(category);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -83,7 +83,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -97,9 +97,9 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Category category, HttpPostedFileBase imgUrl, int id)
+        public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl, int id)
         {
-            var categoryId = db.Category.Where(x => x.CategoryId == id).SingleOrDefault();
+            var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
 
             if (ModelState.IsValid)
             {
@@ -139,7 +139,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -152,7 +152,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             try
             {
                 if (category == null)
@@ -166,7 +166,7 @@ namespace AdminPanelV1.Controllers
                 }
 
 
-                db.Category.Remove(category);
+                db.Categories.Remove(category);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

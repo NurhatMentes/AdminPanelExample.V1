@@ -18,24 +18,24 @@ namespace AdminPanelV1.Controllers
         public ActionResult Index()
         {
             db.Configuration.LazyLoadingEnabled = false;
-            var records = db.Blog.Include("Category").Include("SubCategory").ToList();
+            var records = db.Blogs.Include("Categories").Include("SubCategories").ToList();
             return View(records);
         }
 
         public ActionResult CategoriesPartial()
         {
             CategoriesDto categoriesDto = new CategoriesDto();
-            categoriesDto.Categories = new SelectList(db.Category, "CategoryId", "CategoryName");
-            categoriesDto.SubCategories = new SelectList(db.SubCategory, "SubCategoryId", "SubCategoryName");
+            categoriesDto.Categories = new SelectList(db.Categories, "CategoryId", "CategoryName");
+            categoriesDto.SubCategories = new SelectList(db.SubCategories, "SubCategoryId", "SubCategoryName");
 
             return View(categoriesDto);
         }
 
         public JsonResult SubCategory(int categoryId)
         {
-            var subCategories = (from x in db.SubCategory
-                join y in db.Category on x.Category.CategoryId equals y.CategoryId
-                where x.Category.CategoryId == categoryId
+            var subCategories = (from x in db.SubCategories
+                                 join y in db.Categories on x.Categories.CategoryId equals y.CategoryId
+                where x.Categories.CategoryId == categoryId
                 select new
                 {
                     Text = x.SubCategoryName,
@@ -48,14 +48,14 @@ namespace AdminPanelV1.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName");
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName");
             return View();
         }
 
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Blog blog, HttpPostedFileBase imgUrl)
+        public ActionResult Create(Blogs blog, HttpPostedFileBase imgUrl)
         {
             if (imgUrl != null)
             {
@@ -69,7 +69,7 @@ namespace AdminPanelV1.Controllers
                 blog.ImgUrl = "/Uploads/Blog/" + imgName;
             }
 
-            db.Blog.Add(blog);
+            db.Blogs.Add(blog);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -81,25 +81,25 @@ namespace AdminPanelV1.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var blog = db.Blog.Where(x => x.BlogId == id).SingleOrDefault();
+            var blog = db.Blogs.Where(x => x.BlogId == id).SingleOrDefault();
 
             if (blog == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", blog.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", blog.CategoryId);
             return View(blog);
         }
 
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Blog blog, int id, HttpPostedFileBase ImgUrl)
+        public ActionResult Edit(Blogs blog, int id, HttpPostedFileBase ImgUrl)
         {
             if (ModelState.IsValid)
             {
-                var blogId = db.Blog.Where(x => x.BlogId == id).SingleOrDefault();
+                var blogId = db.Blogs.Where(x => x.BlogId == id).SingleOrDefault();
                 if (ImgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(blogId.ImgUrl)))
@@ -147,7 +147,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Blog blog = db.Blog.Find(id);
+            Blogs blog = db.Blogs.Find(id);
             if (blog == null)
             {
                 return HttpNotFound();
@@ -159,7 +159,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            var blog = db.Blog.Find(id);
+            var blog = db.Blogs.Find(id);
 
             if (blog == null)
             {
@@ -171,7 +171,7 @@ namespace AdminPanelV1.Controllers
                 System.IO.File.Delete(Server.MapPath(blog.ImgUrl));
             }
 
-            db.Blog.Remove(blog);
+            db.Blogs.Remove(blog);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

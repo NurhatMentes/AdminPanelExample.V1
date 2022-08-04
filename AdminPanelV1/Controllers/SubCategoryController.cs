@@ -51,12 +51,12 @@ namespace AdminPanelV1.Controllers
                     subCategory.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
 
-                db.SubCategory.Add(subCategory);
+                db.SubCategories.Add(subCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -67,12 +67,12 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             if (subCategory == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -81,9 +81,9 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategory subCategory, HttpPostedFileBase imgUrl, int id)
+        public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategories subCategory, HttpPostedFileBase imgUrl, int id)
         {
-            var categoryId = db.SubCategory.Where(x => x.SubCategoryId == id).SingleOrDefault();
+            var categoryId = db.SubCategories.Where(x => x.SubCategoryId == id).SingleOrDefault();
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
@@ -109,7 +109,7 @@ namespace AdminPanelV1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -120,7 +120,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             if (subCategory == null)
             {
                 return HttpNotFound();
@@ -133,7 +133,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             try
             {
                 if (subCategory == null)
@@ -147,7 +147,7 @@ namespace AdminPanelV1.Controllers
                 }
 
 
-                db.SubCategory.Remove(subCategory);
+                db.SubCategories.Remove(subCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
