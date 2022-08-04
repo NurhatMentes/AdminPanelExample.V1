@@ -54,6 +54,8 @@ namespace AdminPanelV1.Controllers
             {
                 if (imgUrl != null)
                 {
+                    var userCookie = Request.Cookies["userCookie"];
+
                     WebImage image = new WebImage(imgUrl.InputStream);
                     FileInfo fileInfo = new FileInfo(imgUrl.FileName);
 
@@ -63,8 +65,19 @@ namespace AdminPanelV1.Controllers
 
                     category.ImgUrl = "/Uploads/Category/" + imgName;
 
-
+                    category.UserId = Convert.ToInt16(userCookie["UserId"]);
                     db.Categories.Add(category);
+                    db.SaveChanges();
+
+                    TablesLogs logs = new TablesLogs();
+                    var cat =db.Categories.OrderByDescending(x => x.CategoryId).FirstOrDefault();
+                    logs.ItemId = cat.CategoryId;
+                    logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                    logs.ItemName = cat.CategoryName;
+                    logs.TableName = "Categories";
+                    logs.LogDate = DateTime.Now;
+                    logs.Process = cat.CategoryName + "" + "kategorisi" + "" + cat.Users.UserId + "" + "tarafından eklendi.";
+                    db.TablesLogs.Add(logs);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -100,6 +113,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl, int id)
         {
             var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
+            var userCookie = Request.Cookies["userCookie"];
 
             if (ModelState.IsValid)
             {
@@ -119,11 +133,22 @@ namespace AdminPanelV1.Controllers
 
                     categoryId.ImgUrl = "/Uploads/Category/" + imgName;
 
+                    category.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+
+
 
                 }
                 categoryId.CategoryName = category.CategoryName;
                 categoryId.Description = category.Description;
 
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = category.CategoryId;
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemName = category.CategoryName;
+                logs.TableName = "Categories";
+                logs.LogDate = DateTime.Now;
+                logs.Process = category.CategoryName + "" + "kategorisi" + "" + category.EmendatorAdminId + "" + "tarafından güncellendi.";
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -160,17 +185,27 @@ namespace AdminPanelV1.Controllers
                     return HttpNotFound();
                 }
 
-                if (System.IO.File.Exists(Server.MapPath(category.ImgUrl)))
-                {
-                    System.IO.File.Delete(Server.MapPath(category.ImgUrl));
-                }
+                //if (System.IO.File.Exists(Server.MapPath(category.ImgUrl)))
+                //{
+                //    System.IO.File.Delete(Server.MapPath(category.ImgUrl));
+                //}
+                var userCookie = Request.Cookies["userCookie"];
+                category.EmendatorAdminId =Convert.ToInt16(userCookie["UserId"]);
+                category.State = false;
 
-
-                db.Categories.Remove(category);
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = category.CategoryId;
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemName = category.CategoryName;
+                logs.TableName = "Categories";
+                logs.LogDate = DateTime.Now;
+                logs.Process = category.CategoryName + "" + "kategorisi" + "" + category.EmendatorAdminId + "" + "tarafından silindi.";
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 ViewBag.Danger = "Kategoriyi silmek için öncelikle kategoriye ait ürünleri silmeniz gerekir";
                 return View(category);
