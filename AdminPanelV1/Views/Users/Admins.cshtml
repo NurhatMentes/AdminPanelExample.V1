@@ -1,6 +1,6 @@
 ﻿
 
-@model IEnumerable<AdminPanelV1.Models.Admin>
+@model IEnumerable<AdminPanelV1.Models.Users>
 
 @{
     ViewBag.Title = "Yöneticiler";
@@ -53,8 +53,8 @@
                         @Html.DisplayFor(modelItem => item.Auth)
                     </td>
                     <td>
-                        @Html.ActionLink("Güncelle", "Edit", new { id = item.AdminId }) |
-                        @Html.ActionLink("Sil", "Delete", new { id = item.AdminId })
+                        @Html.ActionLink("Güncelle", "Edit", new { id = item.userid }) |
+                        @Html.ActionLink("Sil", "Delete", new { id = item.userid })
                     </td>
                 </tr>
             }

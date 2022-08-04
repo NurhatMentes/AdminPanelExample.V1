@@ -71,8 +71,8 @@ namespace AdminPanelV1.Controllers
             {
                 if (login.Password == md5pass && login.Email == admin.Email)
                 {
-                    userCookie2["adminid"] = login.UserId.ToString();
-                    userCookie["adminid"] = login.UserId.ToString();
+                    userCookie2["userid"] = login.UserId.ToString();
+                    userCookie["userid"] = login.UserId.ToString();
                     userCookie["email"] = login.Email;
                     userCookie["Auth"] = login.Auth;
                     userCookie["FullName"] = login.FullName;
@@ -232,20 +232,20 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users admin = db.Users.Find(id);
-            if (admin == null)
+            Users users = db.Users.Find(id);
+            if (users == null)
             {
                 return HttpNotFound();
             }
-            return View(admin);
+            return View(users);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Users admin = db.Users.Find(id);
-            db.Users.Remove(admin);
+            Users users = db.Users.Find(id);
+            users.State = false;
             db.SaveChanges();
             return RedirectToAction("Admins");
         }

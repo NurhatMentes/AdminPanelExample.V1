@@ -50,9 +50,9 @@
                                         </p>
                                     </div>
 
-                                    <form class="row g-3 needs-validation" method="post" action="/Admin/Login" novalidate>
+                                    <form class="row g-3 needs-validation" method="post" action="/Users/Login" novalidate>
 
-                                        @if (Session["adminid"] == null)
+                                        @if (Session["userid"] == null)
                                         {
                                             <p class="alert-danger">@ViewBag.Danger</p>
                                         }
@@ -78,7 +78,7 @@
                                             <button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
                                         </div>
                                         <div class="col-12">
-                                            <p class="small mb-0"><a href="/Admin/ForgotMyPassword">Şifremi unuttum</a></p>
+                                            <p class="small mb-0"><a href="/User/ForgotMyPassword">Şifremi unuttum</a></p>
                                         </div>
                                     </form>
 

@@ -21,7 +21,7 @@ namespace AdminPanelV1.Controllers
             var records = db.Blogs.Include("Categories").Include("SubCategories").ToList();
             return View(records);
         }
-
+        //dropdown category cascading 
         public ActionResult CategoriesPartial()
         {
             CategoriesDto categoriesDto = new CategoriesDto();
@@ -57,21 +57,43 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Blogs blog, HttpPostedFileBase imgUrl)
         {
-            if (imgUrl != null)
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
+            if (ModelState.IsValid)
             {
-                WebImage image = new WebImage(imgUrl.InputStream);
-                FileInfo fileInfo = new FileInfo(imgUrl.FileName);
+                if (imgUrl != null)
+                {
+                    WebImage image = new WebImage(imgUrl.InputStream);
+                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
 
-                string imgName = Guid.NewGuid() + fileInfo.Extension;
-                image.Resize(600, 400);
-                image.Save("~/Uploads/Blog/" + imgName);
+                    string imgName = Guid.NewGuid() + fileInfo.Extension;
+                    image.Resize(600, 400);
+                    image.Save("~/Uploads/Blog/" + imgName);
 
-                blog.ImgUrl = "/Uploads/Blog/" + imgName;
+                    blog.ImgUrl = "/Uploads/Blog/" + imgName;
+                }
+
+                blog.UserId = Convert.ToInt16(userCookie["UserId"]);
+                
+                db.Blogs.Add(blog);
+                db.SaveChanges();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = blog.BlogId;
+                logs.ItemName = blog.Title;
+                logs.TableName = "Blog";
+                logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
             }
 
-            db.Blogs.Add(blog);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", blog.UserId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", blog.CategoryId);
+            return View(blog);
         }
 
         public ActionResult Edit(int id)
@@ -97,6 +119,9 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Blogs blog, int id, HttpPostedFileBase ImgUrl)
         {
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
             if (ModelState.IsValid)
             {
                 var blogId = db.Blogs.Where(x => x.BlogId == id).SingleOrDefault();
@@ -134,8 +159,21 @@ namespace AdminPanelV1.Controllers
                 blogId.Content = blog.Content;
                 blogId.Title = blog.Title;
                 blogId.CategoryId = blog.CategoryId;
+                blogId.UserId = Convert.ToInt16(userCookie["UserId"]);
+                blogId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
 
                 db.SaveChanges();
+
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = blog.BlogId;
+                logs.ItemName = blog.Title;
+                logs.TableName = "Blog";
+                logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return View(blog);
@@ -147,7 +185,9 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Blogs blog = db.Blogs.Find(id);
+
             if (blog == null)
             {
                 return HttpNotFound();
@@ -166,12 +206,8 @@ namespace AdminPanelV1.Controllers
                 return HttpNotFound();
             }
 
-            if (System.IO.File.Exists(Server.MapPath(blog.ImgUrl)))
-            {
-                System.IO.File.Delete(Server.MapPath(blog.ImgUrl));
-            }
 
-            db.Blogs.Remove(blog);
+            blog.State = false;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

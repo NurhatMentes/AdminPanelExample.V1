@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdminPanelV1.Models.Blog>
+﻿@model IEnumerable<AdminPanelV1.Models.Blogs>
 @{
     ViewBag.Title = "Blog Kayıtları";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -38,9 +38,9 @@
                     <tr>
                         <th scope="row">@item.BlogId</th>
                         <td>@item.Title</td>
-                        <td>@item.Category.CategoryName</td>
+                        <td>@item.Categories.CategoryName</td>
 
-                        <td>@item.SubCategory.SubCategoryName</td>
+                        <td>@item.SubCategories.SubCategoryName</td>
 
                         <td><img src="@item.ImgUrl" width="100" height="100" /></td>
                         <td>

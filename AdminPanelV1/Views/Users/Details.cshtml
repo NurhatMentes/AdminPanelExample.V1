@@ -1,13 +1,12 @@
-﻿@model AdminPanelV1.Models.Admin
+﻿@model AdminPanelV1.Models.Users
 
 @{
-    ViewBag.Title = "Sil";
+    ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>Details</h2>
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Admin</h4>
     <hr />
@@ -53,6 +52,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.RePassword)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RePassword)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Auth)
         </dt>
 
@@ -61,14 +68,8 @@
         </dd>
 
     </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
 </div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
