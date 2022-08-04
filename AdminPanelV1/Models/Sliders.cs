@@ -12,13 +12,17 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class AdminLog
+    public partial class Sliders
     {
-        public int AdminLogId { get; set; }
-        public int AdminId { get; set; }
-        public string State { get; set; }
-        public Nullable<System.DateTime> LogDate { get; set; }
+        public int SliderId { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public Nullable<int> EmendatorAdminId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ImgUrl { get; set; }
+        public Nullable<bool> State { get; set; }
     
-        public virtual Admin Admin { get; set; }
+        public virtual Users Users { get; set; }
+        public virtual Users Users1 { get; set; }
     }
 }

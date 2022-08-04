@@ -12,11 +12,17 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Slider
+    public partial class Comments
     {
-        public int SliderId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string ImgUrl { get; set; }
+        public int CommentId { get; set; }
+        public Nullable<int> BlogId { get; set; }
+        public Nullable<int> ProductId { get; set; }
+        public string FirstLastName { get; set; }
+        public string Email { get; set; }
+        public string CommentContent { get; set; }
+        public bool Confirmation { get; set; }
+    
+        public virtual Blogs Blogs { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

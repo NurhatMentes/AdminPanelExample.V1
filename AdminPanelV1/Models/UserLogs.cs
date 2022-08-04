@@ -12,14 +12,14 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HomeVideo
+    public partial class UserLogs
     {
-        public int HomeVideoId { get; set; }
-        public Nullable<int> EmendatorAdminId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string VideoUrl { get; set; }
+        public int UserLogId { get; set; }
+        public int UserId { get; set; }
+        public string State { get; set; }
+        public Nullable<System.DateTime> LogDate { get; set; }
     
         public virtual Users Users { get; set; }
+        public virtual Users Users1 { get; set; }
     }
 }

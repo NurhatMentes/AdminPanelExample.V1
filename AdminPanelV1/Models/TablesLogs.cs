@@ -12,12 +12,16 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Service
+    public partial class TablesLogs
     {
-        public int ServiceId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Tag { get; set; }
-        public string ImgUrl { get; set; }
+        public int TablesLogsId { get; set; }
+        public int UserId { get; set; }
+        public int ItemId { get; set; }
+        public string TableName { get; set; }
+        public string ItemName { get; set; }
+        public string Process { get; set; }
+        public System.DateTime LogDate { get; set; }
+    
+        public virtual Users Users { get; set; }
     }
 }

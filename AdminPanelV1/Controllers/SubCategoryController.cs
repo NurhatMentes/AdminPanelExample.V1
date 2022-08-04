@@ -17,7 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: SubCategory
         public ActionResult Index()
         {
-            var subCategory = db.SubCategory.Include("Category");
+            var subCategory = db.SubCategories.Include("Categories");
             return View(subCategory.ToList());
         }
 
@@ -25,7 +25,7 @@ namespace AdminPanelV1.Controllers
         // GET: SubCategory/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName");
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName");
             return View();
         }
 
@@ -34,7 +34,7 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategory subCategory, HttpPostedFileBase imgUrl)
+        public ActionResult Create([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategories subCategory, HttpPostedFileBase imgUrl)
         {
             if (ModelState.IsValid)
             {

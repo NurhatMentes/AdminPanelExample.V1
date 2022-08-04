@@ -12,23 +12,31 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Category
+    public partial class Categories
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Category()
+        public Categories()
         {
-            this.Blog = new HashSet<Blog>();
-            this.SubCategory = new HashSet<SubCategory>();
+            this.Blogs = new HashSet<Blogs>();
+            this.Products = new HashSet<Products>();
+            this.SubCategories = new HashSet<SubCategories>();
         }
     
         public int CategoryId { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public Nullable<int> EmendatorAdminId { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public string ImgUrl { get; set; }
+        public Nullable<bool> State { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Blog> Blog { get; set; }
+        public virtual ICollection<Blogs> Blogs { get; set; }
+        public virtual Users Users { get; set; }
+        public virtual Users Users1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubCategory> SubCategory { get; set; }
+        public virtual ICollection<Products> Products { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubCategories> SubCategories { get; set; }
     }
 }

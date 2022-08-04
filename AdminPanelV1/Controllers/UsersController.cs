@@ -12,7 +12,7 @@ using AdminPanelV1.Models;
 
 namespace AdminPanelV1.Controllers
 {
-    public class AdminController : Controller
+    public class UsersController : Controller
     {
         AdminV1 db = new AdminV1();
 
@@ -22,27 +22,29 @@ namespace AdminPanelV1.Controllers
             var userCookie = Request.Cookies["userCookie"];
             var userCookie2 = Request.Cookies["userCookie2"];
 
+            
            
             if (Request.Cookies["userCookie"] != null)
             {
-                var adminId = Convert.ToInt16(userCookie["AdminId"]);
+                var adminId = Convert.ToInt16(userCookie["UserId"]);
                 var adminName = userCookie["FullName"];
 
-                ViewBag.CommentConf = db.Comment.Where(x => x.Confirmation == false).Count();
-                ViewBag.Comment = db.Comment.Where(x => x.Confirmation == false).ToList();
-                ViewBag.Blog = db.Blog.Count();
-                ViewBag.Service = db.Service.Count();
-                ViewBag.Category = db.Category.Count();
-                ViewBag.CommentNumber = db.Comment.Count();
-                ViewBag.AdminName = db.Admin.ToList();
-                ViewBag.LoginDate = db.AdminLog.OrderByDescending(x => x.AdminLogId);
+                ViewBag.CommentConf = db.Comments.Where(x => x.Confirmation == false).Count();
+                ViewBag.Comment = db.Comments.Where(x => x.Confirmation == false).ToList();
+                ViewBag.Blog = db.Blogs.Count();
+                ViewBag.Product = db.Products.Count();
+                ViewBag.Service = db.Services.Count();
+                ViewBag.Category = db.Categories.Count();
+                ViewBag.CommentNumber = db.Comments.Count();
+                ViewBag.AdminName = db.Users.ToList();
+                ViewBag.LoginDate = db.UserLogs.OrderByDescending(x => x.UserLogId);
             }
             else
             {
-                return RedirectToAction("Login", "Admin");
+                return RedirectToAction("Login", "Users");
             }
 
-            var categoryList = db.Category.ToList();
+            var categoryList = db.Categories.ToList();
             return View(categoryList);
         }
 
@@ -52,7 +54,7 @@ namespace AdminPanelV1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(Admin admin, string password)
+        public ActionResult Login(Users admin, string password)
         {
             HttpCookie userCookie = new HttpCookie("userCookie");
             userCookie.Expires = DateTime.Now.AddMinutes(30);
@@ -61,16 +63,16 @@ namespace AdminPanelV1.Controllers
 
 
             var md5pass = Crypto.Hash(password, "MD5");
-            var login = db.Admin.Where(x => x.Email == admin.Email && x.Password == md5pass).FirstOrDefault();
+            var login = db.Users.Where(x => x.Email == admin.Email && x.Password == md5pass).FirstOrDefault();
 
-            AdminLog adminLog = new AdminLog();
+            UserLogs adminLog = new UserLogs();
 
             if (login != null)
             {
                 if (login.Password == md5pass && login.Email == admin.Email)
                 {
-                    userCookie2["adminid"] = login.AdminId.ToString();
-                    userCookie["adminid"] = login.AdminId.ToString();
+                    userCookie2["adminid"] = login.UserId.ToString();
+                    userCookie["adminid"] = login.UserId.ToString();
                     userCookie["email"] = login.Email;
                     userCookie["Auth"] = login.Auth;
                     userCookie["FullName"] = login.FullName;
@@ -79,16 +81,16 @@ namespace AdminPanelV1.Controllers
                     userCookie["OldPassword"] = login.RePassword;
 
 
-                    adminLog.AdminId = login.AdminId;
+                    adminLog.UserId = login.UserId;
                     adminLog.State = "Giriş Yapıldı";
                     adminLog.LogDate = DateTime.Now; ;
-                    db.AdminLog.Add(adminLog);
+                    db.UserLogs.Add(adminLog);
                     db.SaveChanges();
 
                     Response.Cookies.Add(userCookie);
                     Response.Cookies.Add(userCookie2);
 
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Users");
                 }
             }
             ViewBag.Danger = "E-posta veya Şifre hatalı";
@@ -100,17 +102,17 @@ namespace AdminPanelV1.Controllers
             var userCookie1 = Request.Cookies["userCookie"];
             var userCookie2 = Request.Cookies["userCookie2"];
 
-            AdminLog adminLog = new AdminLog();
-            adminLog.AdminId = Convert.ToInt16(userCookie1["AdminId"]);
+            UserLogs adminLog = new UserLogs();
+            adminLog.UserId = Convert.ToInt16(userCookie1["AdminId"]);
             adminLog.State = "Çıkış Yapıldı";
             adminLog.LogDate = DateTime.Now; ;
-            db.AdminLog.Add(adminLog);
+            db.UserLogs.Add(adminLog);
             db.SaveChanges();
 
             Request.Cookies.Remove(userCookie1.ToString());
             Request.Cookies.Remove(userCookie2.ToString());
 
-            return RedirectToAction("Login", "Admin");
+            return RedirectToAction("Login", "Users");
         }
 
         public ActionResult ForgotMyPassword()
@@ -121,7 +123,7 @@ namespace AdminPanelV1.Controllers
         [HttpPost]
         public ActionResult ForgotMyPassword(string email = null)
         {
-            var user = db.Admin.Where(x => x.Email == email).SingleOrDefault();
+            var user = db.Users.Where(x => x.Email == email).SingleOrDefault();
             var ePosta = db.SystemAdmin.Select(x => x.Email).SingleOrDefault();
             var password = db.SystemAdmin.Select(x => x.Password).SingleOrDefault();
 
@@ -133,7 +135,7 @@ namespace AdminPanelV1.Controllers
 
                 string newPassword = rndPass.ToString() + rndPass2.ToString();
 
-                Admin admin = new Admin();
+                Users admin = new Users();
                 user.Password = Crypto.Hash(newPassword, "MD5");
                 user.RePassword = Crypto.Hash(newPassword, "MD5");
                 db.SaveChanges();
@@ -164,13 +166,13 @@ namespace AdminPanelV1.Controllers
 
         public ActionResult CommentPartial()
         {
-            ViewBag.CommentConf = db.Comment.Where(x => x.Confirmation == false).Count();
-            return View(db.Comment.Where(x => x.Confirmation == false).ToList());
+            ViewBag.CommentConf = db.Comments.Where(x => x.Confirmation == false).Count();
+            return View(db.Comments.Where(x => x.Confirmation == false).ToList());
         }
 
         public ActionResult Admins()
         {
-            return View(db.Admin.ToList());
+            return View(db.Users.ToList());
         }
 
         public ActionResult Create()
@@ -179,13 +181,13 @@ namespace AdminPanelV1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Admin admin, string password)
+        public ActionResult Create(Users admin, string password)
         {
             if (ModelState.IsValid)
             {
                 admin.Password = Crypto.Hash(password, "MD5");
                 admin.RePassword = Crypto.Hash(password, "MD5");
-                db.Admin.Add(admin);
+                db.Users.Add(admin);
                 db.SaveChanges();
 
                 return RedirectToAction("Admins");
@@ -196,16 +198,16 @@ namespace AdminPanelV1.Controllers
 
         public ActionResult Edit(int id)
         {
-            var admin = db.Admin.Where(x => x.AdminId == id).SingleOrDefault();
+            var admin = db.Users.Where(x => x.UserId == id).SingleOrDefault();
             return View(admin);
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, Admin admin, string password)
+        public ActionResult Edit(int id, Users admin, string password)
         {
             if (ModelState.IsValid)
             {
-                var adm = db.Admin.Where(x => x.AdminId == id).SingleOrDefault();
+                var adm = db.Users.Where(x => x.UserId == id).SingleOrDefault();
                 if (password != adm.Password)
                 {
                     adm.Password = Crypto.Hash(password, "MD5");
@@ -230,7 +232,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Admin admin = db.Admin.Find(id);
+            Users admin = db.Users.Find(id);
             if (admin == null)
             {
                 return HttpNotFound();
@@ -242,8 +244,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Admin admin = db.Admin.Find(id);
-            db.Admin.Remove(admin);
+            Users admin = db.Users.Find(id);
+            db.Users.Remove(admin);
             db.SaveChanges();
             return RedirectToAction("Admins");
         }

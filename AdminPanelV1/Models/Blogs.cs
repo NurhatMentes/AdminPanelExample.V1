@@ -12,21 +12,28 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SubCategory
+    public partial class Blogs
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SubCategory()
+        public Blogs()
         {
-            this.Blog = new HashSet<Blog>();
+            this.Comments = new HashSet<Comments>();
         }
     
-        public int SubCategoryId { get; set; }
-        public Nullable<int> CategoryId { get; set; }
-        public string SubCategoryName { get; set; }
+        public int BlogId { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public Nullable<int> EmendatorAdminId { get; set; }
+        public int CategoryId { get; set; }
+        public Nullable<int> SubCategoryId { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
         public string ImgUrl { get; set; }
+        public Nullable<bool> State { get; set; }
     
-        public virtual Category Category { get; set; }
+        public virtual Categories Categories { get; set; }
+        public virtual SubCategories SubCategories { get; set; }
+        public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Blog> Blog { get; set; }
+        public virtual ICollection<Comments> Comments { get; set; }
     }
 }
