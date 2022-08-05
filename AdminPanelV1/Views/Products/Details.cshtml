@@ -1,0 +1,109 @@
+﻿@model AdminPanelV1.Models.Products
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card alert-dark">
+    <div class="card-body">
+        <h4 class="card-title">Ürün Detayı</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OldPrice)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OldPrice)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Stock)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Stock)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Color)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Color)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
+
+            <dd>
+                @Html.Raw(Model.Content)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ImgUrl)
+            </dt>
+
+            <dd>
+                <img src="@Model.ImgUrl" width="300" height="200" />
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Users.FullName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Users.FullName)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Categories.CategoryName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Categories.CategoryName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.File)
+            </dt>
+            <td>
+                @{
+                    if (Model.File != null)
+                    {
+                        <p>@Html.Raw(Model.File.Substring(17))</p>
+                    }
+                    else
+                    {
+                        <p>Yok</p>
+                    }
+                }
+            </td>
+
+        </dl>
+    </div>
+</div>
+    <p>
+        @Html.ActionLink("Düzenle", "Edit", new { id = Model.ProductId }) |
+        @Html.ActionLink("Geri Dön", "Index")
+    </p>
+

@@ -29,10 +29,23 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(int id, AboutUs aboutUs)
         {
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
             if (ModelState.IsValid)
             {
                 var about = db.AboutUs.Where(x => x.AboutUsId == id).FirstOrDefault();
                 about.Description = aboutUs.Description;
+                about.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                db.SaveChanges();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = about.AboutUsId;
+                logs.ItemName = "Hakkımızda";
+                logs.TableName = "AboutUs";
+                logs.Process = "Hakkımızda" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
 
                 return RedirectToAction("Index");

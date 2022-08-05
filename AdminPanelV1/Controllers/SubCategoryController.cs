@@ -17,15 +17,15 @@ namespace AdminPanelV1.Controllers
         // GET: SubCategory
         public ActionResult Index()
         {
-            var subCategory = db.SubCategory.Include("Category");
-            return View(subCategory.ToList());
+            var subCategory = db.SubCategories.Include("Categories");
+            return View(subCategory.Where(x => x.State == true).ToList());
         }
 
 
         // GET: SubCategory/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName");
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName");
             return View();
         }
 
@@ -34,8 +34,11 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategory subCategory, HttpPostedFileBase imgUrl)
+        public ActionResult Create(SubCategories subCategory, HttpPostedFileBase imgUrl)
         {
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
             if (ModelState.IsValid)
             {
 
@@ -51,12 +54,24 @@ namespace AdminPanelV1.Controllers
                     subCategory.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
 
-                db.SubCategory.Add(subCategory);
+                subCategory.UserId= Convert.ToInt16(userCookie["UserId"]);
+
+                db.SubCategories.Add(subCategory);
                 db.SaveChanges();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = subCategory.SubCategoryId;
+                logs.ItemName = subCategory.SubCategoryName;
+                logs.TableName = "SubCategories";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -67,12 +82,12 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             if (subCategory == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -81,9 +96,12 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategory subCategory, HttpPostedFileBase imgUrl, int id)
+        public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategories subCategory, HttpPostedFileBase imgUrl, int id)
         {
-            var categoryId = db.SubCategory.Where(x => x.SubCategoryId == id).SingleOrDefault();
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
+            var categoryId = db.SubCategories.Where(x => x.SubCategoryId == id).SingleOrDefault();
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
@@ -106,10 +124,22 @@ namespace AdminPanelV1.Controllers
 
                 categoryId.SubCategoryName = subCategory.SubCategoryName;
                 categoryId.CategoryId = subCategory.CategoryId;
+                categoryId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+
                 db.SaveChanges();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = subCategory.SubCategoryId;
+                logs.ItemName = subCategory.SubCategoryName;
+                logs.TableName = "SubCategories";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", subCategory.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", subCategory.CategoryId);
             return View(subCategory);
         }
 
@@ -120,7 +150,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             if (subCategory == null)
             {
                 return HttpNotFound();
@@ -133,7 +163,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SubCategory subCategory = db.SubCategory.Find(id);
+            SubCategories subCategory = db.SubCategories.Find(id);
             try
             {
                 if (subCategory == null)
@@ -141,14 +171,22 @@ namespace AdminPanelV1.Controllers
                     return HttpNotFound();
                 }
 
-                if (System.IO.File.Exists(Server.MapPath(subCategory.ImgUrl)))
-                {
-                    System.IO.File.Delete(Server.MapPath(subCategory.ImgUrl));
-                }
 
-
-                db.SubCategory.Remove(subCategory);
+                subCategory.State = false;
                 db.SaveChanges();
+
+                var userCookie = Request.Cookies["userCookie"];
+                TablesLogs logs = new TablesLogs();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = subCategory.SubCategoryId;
+                logs.ItemName = subCategory.SubCategoryName;
+                logs.TableName = "SubCategories";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             catch (Exception e)

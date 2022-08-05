@@ -51,6 +51,8 @@ namespace AdminPanelV1.Controllers
                     Description = homeVideo.Description,
                     VideoUrl = "/Uploads/HomeVideo/" + fileInfo.Name
                 });
+                var userCookie = Request.Cookies["userCookie"];
+                homeVideo.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
                 VideoUrl.SaveAs(folderPath + fileInfo.Name);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -99,13 +101,23 @@ namespace AdminPanelV1.Controllers
                     System.IO.File.Delete(Server.MapPath(homeVideo.VideoUrl));
                 }
 
+                var userCookie = Request.Cookies["userCookie"];
+                videoUpdate.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
 
                 videoUpdate.Title = homeVideo.Title;
                 videoUpdate.Description = homeVideo.Description;
                 videoUpdate.VideoUrl = "/Uploads/HomeVideo/" + fileInfo.Name;
                 VideoUrl.SaveAs(folderPath + fileInfo.Name);
+                db.SaveChanges();
 
-            
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = videoUpdate.HomeVideoId;
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemName = videoUpdate.Title;
+                logs.TableName = "HomeVideo";
+                logs.LogDate = DateTime.Now;
+                logs.Process = videoUpdate.Title + " " + "Ana sayfa video" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -134,13 +146,22 @@ namespace AdminPanelV1.Controllers
         {
             HomeVideo homeVideo = db.HomeVideo.Find(id);
 
-            if (System.IO.File.Exists(Server.MapPath(homeVideo.VideoUrl)))
-            {
-                System.IO.File.Delete(Server.MapPath(homeVideo.VideoUrl));
-            }
 
             db.HomeVideo.Remove(homeVideo);
             db.SaveChanges();
+
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
+            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.ItemId = homeVideo.HomeVideoId;
+            logs.ItemName = homeVideo.Title;
+            logs.TableName = "HomeVideo";
+            logs.Process = homeVideo.Title + " " + "Videosu" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.LogDate = DateTime.Now;
+            db.TablesLogs.Add(logs);
+            db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
