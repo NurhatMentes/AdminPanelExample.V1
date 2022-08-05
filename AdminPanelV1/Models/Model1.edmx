@@ -97,7 +97,11 @@
           <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Tag" Type="ntext" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
+<<<<<<< HEAD
           <Property Name="State" Type="bit" />
+=======
+          <Property Name="State" Type="bit" Nullable="false" />
+>>>>>>> 8c07f0b4b8b79ec65b9ea62daf52d8e80eda75c8
         </EntityType>
         <EntityType Name="ProductSliders">
           <Key>
@@ -744,7 +748,11 @@
           <NavigationProperty Name="SubCategories" Relationship="Self.FK_Products_SubCategories" FromRole="Products" ToRole="SubCategories" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Products_Users" FromRole="Products" ToRole="Users" />
           <NavigationProperty Name="ProductSliders" Relationship="Self.FK_ProductSliders_Products" FromRole="Products" ToRole="ProductSliders" />
+<<<<<<< HEAD
           <Property Name="State" Type="Boolean" />
+=======
+          <Property Name="State" Type="Boolean" Nullable="false" />
+>>>>>>> 8c07f0b4b8b79ec65b9ea62daf52d8e80eda75c8
         </EntityType>
         <EntityType Name="ProductSliders">
           <Key>
@@ -794,7 +802,7 @@
           <Property Name="Title" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" DefaultValue="true" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Sliders_Users" FromRole="Sliders" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_Sliders_Users1" FromRole="Sliders" ToRole="Users" />
         </EntityType>

@@ -16,7 +16,7 @@ namespace AdminPanelV1.Controllers
         // GET: Comment
         public ActionResult Index()
         {
-            var comment = db.Comments.Include("Blog");
+            var comment = db.Comments.Include("Blogs").Include("Products");
             return View(comment.ToList());
         }
 
@@ -41,7 +41,7 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CommentId,BlogId,FirstLastName,Email,CommentContent,Confirmation")] Comments comment,int id)
+        public ActionResult Edit( Comments comment,int id)
         {
             var commentId = db.Comments.Find(id);
 

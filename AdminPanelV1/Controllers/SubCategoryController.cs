@@ -18,7 +18,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Index()
         {
             var subCategory = db.SubCategories.Include("Categories");
-            return View(subCategory.ToList());
+            return View(subCategory.Where(x => x.State == true).ToList());
         }
 
 
@@ -174,6 +174,19 @@ namespace AdminPanelV1.Controllers
 
                 subCategory.State = false;
                 db.SaveChanges();
+
+                var userCookie = Request.Cookies["userCookie"];
+                TablesLogs logs = new TablesLogs();
+
+                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.ItemId = subCategory.SubCategoryId;
+                logs.ItemName = subCategory.SubCategoryName;
+                logs.TableName = "SubCategories";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             catch (Exception e)
