@@ -1,7 +1,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols" rel="stylesheet">
 <h1>📌ADMİN PANEL V1</h1>
+<H3>🔗V1.1</H3>
 <ol>
     <b>:red_circle: Sidebar</b>
     <li>Site kimlik bölümü
@@ -145,3 +149,46 @@
 </ol>
 
 ![image](https://user-images.githubusercontent.com/77548161/182669198-6d4afb09-9b94-429d-b91d-46ef80cc3396.png)
+
+<H3>🔗V1.2</H3>
+<li>Anasayfa resim bölümü
+    <ul>
+        <li style="list-style-type: none;">
+            <p>📋Liste (düzenle)</p>
+            <p>➡Başlık</p>
+            <p>➡Açıklama</p>
+            <p>➡Resim</p>
+        </li>
+    </ul>
+</li>
+
+<li>Ürünler bölümü
+    <ul>
+        <li style="list-style-type: none;">
+            <p>📋Liste (ekle,sil,düzenle)</p>
+            <p>➡Başlık</p>
+            <p>➡Ana kategori</p>
+            <p>➡Alt kategori</p>
+            <p>➡Açıklama</p>
+            <p>➡Stok</p>
+            <p>➡Renk</p>
+            <p>➡Fiyat</p>
+            <p>➡Pdf ekleme</p>
+            <p>➡Etiketler (seo)</p>
+            <p>➡Slider resimleri</p>
+            <p>➡Resim</p>
+        </li>
+    </ul>
+</li>
+
+<li>Ürün resim bölümü
+    <ul>
+        <li style="list-style-type: none;">
+            <p>📋Liste (düzenle)</p>
+            <p>➡Ürün</p>
+            <p>➡Resim</p>
+        </li>
+    </ul>
+</li>
+</ol>
+
