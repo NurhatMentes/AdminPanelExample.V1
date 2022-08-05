@@ -18,7 +18,7 @@ namespace AdminPanelV1.Controllers
         {
             return View(db.Contact.ToList());
         }
-
+         
         // GET: Contact/Edit/5
         public ActionResult Edit(int? id)
         {

@@ -15,7 +15,7 @@
         <EntityTypeShape EntityType="AdminV1Model.ProductSliders" Width="1.5" PointX="10.5" PointY="19.375" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminV1Model.Services" Width="1.5" PointX="3" PointY="25.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminV1Model.SiteIdentity" Width="1.5" PointX="3" PointY="29.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminV1Model.Sliders" Width="1.5" PointX="3" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AdminV1Model.Sliders" Width="1.5" PointX="3" PointY="32.625" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminV1Model.SubCategories" Width="1.5" PointX="5.25" PointY="13.625" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminV1Model.sysdiagrams" Width="1.5" PointX="1" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminV1Model.SystemAdmin" Width="1.5" PointX="3.25" PointY="6.125" IsExpanded="true" />
