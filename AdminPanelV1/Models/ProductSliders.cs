@@ -17,6 +17,7 @@ namespace AdminPanelV1.Models
         public int SliderId { get; set; }
         public int ProductId { get; set; }
         public string ImgUrl { get; set; }
+        public Nullable<bool> State { get; set; }
     
         public virtual Products Products { get; set; }
     }

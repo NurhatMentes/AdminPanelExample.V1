@@ -123,6 +123,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AboutUsController.cs" />
+    <Compile Include="Controllers\HomeSlidersController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ProductSlidersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\UserProfilController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
@@ -1361,12 +1364,32 @@
     <Content Include="Views\Blog\Edit.cshtml" />
     <Content Include="Views\Blog\CategoriesPartial.cshtml" />
     <Content Include="Views\Blog\Create.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Products\CategoriesPartial.cshtml" />
+    <Content Include="Views\ProductSliders\Index.cshtml" />
+    <Content Include="Views\ProductSliders\Create.cshtml" />
+    <Content Include="Views\ProductSliders\Edit.cshtml" />
+    <Content Include="Views\Blog\Delete.cshtml" />
+    <Content Include="Views\ProductSliders\Delete.cshtml" />
+    <Content Include="Views\HomeSliders\Create.cshtml" />
+    <Content Include="Views\HomeSliders\Delete.cshtml" />
+    <Content Include="Views\HomeSliders\Details.cshtml" />
+    <Content Include="Views\HomeSliders\Edit.cshtml" />
+    <Content Include="Views\HomeSliders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Uploads\Blog\" />
+    <Folder Include="Uploads\Catalog\" />
     <Folder Include="Uploads\Category\" />
+    <Folder Include="Uploads\HomeSlider\" />
     <Folder Include="Uploads\HomeVideo\" />
+    <Folder Include="Uploads\ProductSlider\" />
+    <Folder Include="Uploads\Product\" />
     <Folder Include="Uploads\Service\" />
     <Folder Include="Uploads\SiteIdentity\" />
     <Folder Include="Uploads\SubCategory\" />

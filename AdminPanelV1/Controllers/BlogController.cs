@@ -209,6 +209,20 @@ namespace AdminPanelV1.Controllers
 
             blog.State = false;
             db.SaveChanges();
+
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
+            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.ItemId = blog.BlogId;
+            logs.ItemName = blog.Title;
+            logs.TableName = "Blogs";
+            logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.LogDate = DateTime.Now;
+            db.TablesLogs.Add(logs);
+            db.SaveChanges();
+
+        
             return RedirectToAction("Index");
         }
     }

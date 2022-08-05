@@ -17,7 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: Service
         public ActionResult Index()
         {
-            return View(db.Services.ToList());
+            return View(db.Services.Where(x => x.State == true).ToList());
         }
 
         public ActionResult Create()
@@ -154,14 +154,22 @@ namespace AdminPanelV1.Controllers
                 return HttpNotFound();
             }
 
-            if (System.IO.File.Exists(Server.MapPath(service.ImgUrl)))
-            {
-                System.IO.File.Delete(Server.MapPath(service.ImgUrl));
-            }
-
 
             service.State = false;
             db.SaveChanges();
+
+            var userCookie = Request.Cookies["userCookie"];
+            TablesLogs logs = new TablesLogs();
+
+            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.ItemId = service.ServiceId;
+            logs.ItemName = service.Title;
+            logs.TableName = "Services";
+            logs.Process = service.Title + " " + "Hizmeti" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.LogDate = DateTime.Now;
+            db.TablesLogs.Add(logs);
+            db.SaveChanges();
+
             return RedirectToAction("Index");
 
         }

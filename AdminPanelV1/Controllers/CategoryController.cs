@@ -18,7 +18,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Index()
         {
 
-            var category = db.Categories;
+            var category = db.Categories.Where(x => x.State==true);
             return View(category.ToList());
         }
 
@@ -185,13 +185,9 @@ namespace AdminPanelV1.Controllers
                     return HttpNotFound();
                 }
 
-                //if (System.IO.File.Exists(Server.MapPath(category.ImgUrl)))
-                //{
-                //    System.IO.File.Delete(Server.MapPath(category.ImgUrl));
-                //}
                 var userCookie = Request.Cookies["userCookie"];
-                category.EmendatorAdminId =Convert.ToInt16(userCookie["UserId"]);
                 category.State = false;
+                db.SaveChanges();
 
                 TablesLogs logs = new TablesLogs();
                 logs.ItemId = category.CategoryId;
@@ -199,7 +195,7 @@ namespace AdminPanelV1.Controllers
                 logs.ItemName = category.CategoryName;
                 logs.TableName = "Categories";
                 logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.Process = category.CategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
 

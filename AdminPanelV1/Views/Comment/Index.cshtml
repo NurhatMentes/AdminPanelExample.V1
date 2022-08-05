@@ -28,6 +28,9 @@
                         Blog
                     </th>
                     <th>
+                        Ürün
+                    </th>
+                    <th>
                         Yorum Yapan
                     </th>
                     <th>
@@ -48,7 +51,10 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Blog.Title)
+                            @Html.DisplayFor(modelItem => item.Blogs.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Products.Title)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.FirstLastName)

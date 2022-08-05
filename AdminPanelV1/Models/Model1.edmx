@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="AdminV1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="AdminV1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AboutUs">
           <Key>
             <PropertyRef Name="AboutUsId" />
@@ -97,6 +97,7 @@
           <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Tag" Type="ntext" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductSliders">
           <Key>
@@ -105,6 +106,7 @@
           <Property Name="SliderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="State" Type="bit" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
@@ -627,8 +629,7 @@
             <End Role="UserLogs" EntitySet="UserLogs" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="AdminV1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -743,6 +744,7 @@
           <NavigationProperty Name="SubCategories" Relationship="Self.FK_Products_SubCategories" FromRole="Products" ToRole="SubCategories" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Products_Users" FromRole="Products" ToRole="Users" />
           <NavigationProperty Name="ProductSliders" Relationship="Self.FK_ProductSliders_Products" FromRole="Products" ToRole="ProductSliders" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductSliders">
           <Key>
@@ -752,6 +754,7 @@
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="Self.FK_ProductSliders_Products" FromRole="ProductSliders" ToRole="Products" />
+          <Property Name="State" Type="Boolean" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
@@ -791,7 +794,7 @@
           <Property Name="Title" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" DefaultValue="true" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Sliders_Users" FromRole="Sliders" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_Sliders_Users1" FromRole="Sliders" ToRole="Users" />
         </EntityType>
@@ -1391,6 +1394,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="AdminV1Model.Products">
               <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
@@ -1413,6 +1417,7 @@
           <EntitySetMapping Name="ProductSliders">
             <EntityTypeMapping TypeName="AdminV1Model.ProductSliders">
               <MappingFragment StoreEntitySet="ProductSliders">
+                <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="SliderId" ColumnName="SliderId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
