@@ -37,11 +37,6 @@ namespace AdminPanelV1.Models
         public Nullable<int> EmendatorAdminId { get; set; }
         public string Tag { get; set; }
         public string ImgUrl { get; set; }
-<<<<<<< HEAD
-        public Nullable<bool> State { get; set; }
-=======
-        public bool State { get; set; }
->>>>>>> 8c07f0b4b8b79ec65b9ea62daf52d8e80eda75c8
     
         public virtual Categories Categories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
