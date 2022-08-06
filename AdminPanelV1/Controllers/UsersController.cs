@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Security;
 using AdminPanelV1.Models;
 
 namespace AdminPanelV1.Controllers
@@ -19,79 +20,54 @@ namespace AdminPanelV1.Controllers
         // GET: Admins
         public ActionResult Index()
         {
-            var userCookie = Request.Cookies["userCookie"];
-            var userCookie2 = Request.Cookies["userCookie2"];
 
-            
-           
-            if (Request.Cookies["userCookie"] != null)
-            {
-                var adminId = Convert.ToInt16(userCookie["UserId"]);
-                var adminName = userCookie["FullName"];
-
-                ViewBag.CommentConf = db.Comments.Where(x => x.Confirmation == false).Count();
-                ViewBag.Comment = db.Comments.Where(x => x.Confirmation == false).ToList();
-                ViewBag.Blog = db.Blogs.Count();
-                ViewBag.Product = db.Products.Count();
-                ViewBag.Service = db.Services.Count();
-                ViewBag.Category = db.Categories.Count();
-                ViewBag.CommentNumber = db.Comments.Count();
-                ViewBag.AdminName = db.Users.ToList();
-                ViewBag.LoginDate = db.UserLogs.OrderByDescending(x => x.UserLogId);
-            }
-            else
-            {
-                return RedirectToAction("Login", "Users");
-            }
+            ViewBag.CommentConf = db.Comments.Where(x => x.Confirmation == false).Count();
+            ViewBag.Comment = db.Comments.Where(x => x.Confirmation == false).ToList();
+            ViewBag.Blog = db.Blogs.Count();
+            ViewBag.Product = db.Products.Count();
+            ViewBag.Service = db.Services.Count();
+            ViewBag.Category = db.Categories.Count();
+            ViewBag.CommentNumber = db.Comments.Count();
+            ViewBag.AdminName = db.Users.ToList();
+            ViewBag.LoginDate = db.UserLogs.OrderByDescending(x => x.UserLogId);
 
             var categoryList = db.Categories.ToList();
             return View(categoryList);
         }
 
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Login(Users admin, string password)
         {
-            HttpCookie userCookie = new HttpCookie("userCookie");
-            userCookie.Expires = DateTime.Now.AddMinutes(30);
-            HttpCookie userCookie2 = new HttpCookie("userCookie2");
-            userCookie2.Expires = DateTime.Now.AddMinutes(30);
-
-
             var md5pass = Crypto.Hash(password, "MD5");
             var login = db.Users.Where(x => x.Email == admin.Email && x.Password == md5pass).FirstOrDefault();
 
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            userCookie.Expires = DateTime.Now.AddMinutes(30);
             UserLogs adminLog = new UserLogs();
 
             if (login != null)
             {
-                if (login.Password == md5pass && login.Email == admin.Email)
-                {
-                    userCookie2["userid"] = login.UserId.ToString();
-                    userCookie["userid"] = login.UserId.ToString();
-                    userCookie["email"] = login.Email;
-                    userCookie["Auth"] = login.Auth;
-                    userCookie["FullName"] = login.FullName;
-                    userCookie["Job"] = login.Job;
-                    userCookie["Phone"] = login.Phone;
-                    userCookie["OldPassword"] = login.RePassword;
+                FormsAuthentication.SetAuthCookie(login.Email + "|" + login.UserId + "|" +
+                                                  login.Auth + "|" + login.FullName + "|" + login.Job + "|" +
+                                                  login.Phone + "|" + login.RePassword, true);
 
 
-                    adminLog.UserId = login.UserId;
-                    adminLog.State = "Giriş Yapıldı";
-                    adminLog.LogDate = DateTime.Now; ;
-                    db.UserLogs.Add(adminLog);
-                    db.SaveChanges();
+                adminLog.UserId = login.UserId;
+                adminLog.State = "Giriş Yapıldı";
+                adminLog.LogDate = DateTime.Now; ;
+                db.UserLogs.Add(adminLog);
+                db.SaveChanges();
 
-                    Response.Cookies.Add(userCookie);
-                    Response.Cookies.Add(userCookie2);
 
-                    return RedirectToAction("Index", "Users");
-                }
+                return RedirectToAction("Index", "Users");
+
             }
             ViewBag.Danger = "E-posta veya Şifre hatalı";
             return View(admin);
@@ -99,27 +75,26 @@ namespace AdminPanelV1.Controllers
 
         public ActionResult Logout()
         {
-            var userCookie1 = Request.Cookies["userCookie"];
-            var userCookie2 = Request.Cookies["userCookie2"];
+            FormsAuthentication.SignOut();
 
             UserLogs adminLog = new UserLogs();
-            adminLog.UserId = Convert.ToInt16(userCookie1["AdminId"]);
-            adminLog.State = "Çıkış Yapıldı";
-            adminLog.LogDate = DateTime.Now; ;
+            adminLog.UserId = Convert.ToInt32(System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1]); ;
+            adminLog.State = "Güvenli Çıkış Yapıldı";
+            adminLog.LogDate = DateTime.Now;
             db.UserLogs.Add(adminLog);
             db.SaveChanges();
 
-            Request.Cookies.Remove(userCookie1.ToString());
-            Request.Cookies.Remove(userCookie2.ToString());
 
             return RedirectToAction("Login", "Users");
         }
 
+        [AllowAnonymous]
         public ActionResult ForgotMyPassword()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult ForgotMyPassword(string email = null)
         {

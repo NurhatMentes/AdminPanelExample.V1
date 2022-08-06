@@ -33,7 +33,7 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(int id, SiteIdentity siteIdentity, HttpPostedFileBase LogoUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -68,11 +68,14 @@ namespace AdminPanelV1.Controllers
 
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
+                logs.UserId = userId;
                 logs.ItemId = identity.IdentityId;
                 logs.ItemName = identity.Title;
                 logs.TableName = "SiteIdentity";
-                logs.Process = identity.Title + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = identity.Title + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();

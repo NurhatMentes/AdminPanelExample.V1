@@ -29,7 +29,9 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Create(Services service, HttpPostedFileBase ImgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -44,17 +46,17 @@ namespace AdminPanelV1.Controllers
                     image.Save("~/Uploads/Service/" + imgName);
 
                     service.ImgUrl = "/Uploads/Service/" + imgName;
-                    service.UserId= Convert.ToInt16(userCookie["UserId"]);
+                    service.UserId= userId;
 
 
                     db.Services.Add(service);
                     db.SaveChanges();
 
-                    logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                    logs.UserId = userId;
                     logs.ItemId = service.ServiceId;
                     logs.ItemName = service.Title;
                     logs.TableName = "Services";
-                    logs.Process = service.Title + " " + "Hizmeti" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                    logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından eklendi.";
                     logs.LogDate = DateTime.Now;
                     db.TablesLogs.Add(logs);
                     db.SaveChanges();
@@ -86,7 +88,7 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(int? id, Services service, HttpPostedFileBase ImgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -109,17 +111,20 @@ namespace AdminPanelV1.Controllers
                     serviceId.ImgUrl = "/Uploads/Service/" + imgName;
                 }
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
                 serviceId.Description = service.Description;
                 serviceId.Title = service.Title;
                 serviceId.Tag = service.Tag;
-                serviceId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                serviceId.EmendatorAdminId = userId;
 
                 db.SaveChanges();
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId);
                 logs.ItemId = serviceId.ServiceId;
                 logs.ItemName = service.Title;
                 logs.TableName = "Services";
-                logs.Process = service.Title + " " + "Hizmeti" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -158,14 +163,16 @@ namespace AdminPanelV1.Controllers
             service.State = false;
             db.SaveChanges();
 
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
             TablesLogs logs = new TablesLogs();
 
-            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.UserId = userId;
             logs.ItemId = service.ServiceId;
             logs.ItemName = service.Title;
             logs.TableName = "Services";
-            logs.Process = service.Title + " " + "Hizmeti" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından silindi.";
             logs.LogDate = DateTime.Now;
             db.TablesLogs.Add(logs);
             db.SaveChanges();

@@ -56,7 +56,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductSliders productSlider, HttpPostedFileBase imgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+          
             TablesLogs logs = new TablesLogs();
 
             int productId = productSlider.ProductId;
@@ -75,11 +75,14 @@ namespace AdminPanelV1.Controllers
                 db.ProductSliders.Add(productSlider);
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
+                logs.UserId = userId;
                 logs.ItemId = productId;
                 logs.ItemName = db.Products.FirstOrDefault(x=>x.ProductId==productId)?.Title;
                 logs.TableName = "ProductSliders";
-                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == productId)?.Title + " " + "Ürünün resmi" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == productId)?.Title + " " + "Ürünün resmi" + " " + userName + " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -115,7 +118,7 @@ namespace AdminPanelV1.Controllers
         //değişken id olarak productId girildi böylece dropdown list içerisinden ürünün id'sini değişken olarak aldı.
         public ActionResult Edit([Bind(Include = "SliderId,ProductId,ImgUrl")] ProductSliders productSlider, HttpPostedFileBase imgUrl, int ProductId)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -141,11 +144,14 @@ namespace AdminPanelV1.Controllers
 
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
+                logs.UserId = userId;
                 logs.ItemId = pSlider.SliderId;
                 logs.ItemName = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title;
                 logs.TableName = "ProductSliders";
-                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title + " " + "Ürünün resmi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title + " " + "Ürünün resmi" + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -190,14 +196,16 @@ namespace AdminPanelV1.Controllers
                 productSlider.State = false;
                 db.SaveChanges();
 
-                var userCookie = Request.Cookies["userCookie"];
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
                 TablesLogs logs = new TablesLogs();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = productSlider.SliderId;
                 logs.ItemName = db.Products.FirstOrDefault(x => x.ProductId == productSlider.ProductId)?.Title;
                 logs.TableName = "ProductSliders";
-                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == productSlider.ProductId)?.Title + " " + "Resmi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == productSlider.ProductId)?.Title + " " + "Resmi" + " " + userName + " " + "tarafından silindi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();

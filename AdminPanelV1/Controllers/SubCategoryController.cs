@@ -36,7 +36,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(SubCategories subCategory, HttpPostedFileBase imgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+           
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -54,16 +54,19 @@ namespace AdminPanelV1.Controllers
                     subCategory.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
 
-                subCategory.UserId= Convert.ToInt16(userCookie["UserId"]);
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
+                subCategory.UserId= userId;
                 db.SubCategories.Add(subCategory);
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = subCategory.SubCategoryId;
                 logs.ItemName = subCategory.SubCategoryName;
                 logs.TableName = "SubCategories";
-                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userName + " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -98,7 +101,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategories subCategory, HttpPostedFileBase imgUrl, int id)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             var categoryId = db.SubCategories.Where(x => x.SubCategoryId == id).SingleOrDefault();
@@ -121,18 +124,19 @@ namespace AdminPanelV1.Controllers
                     categoryId.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
 
                 categoryId.SubCategoryName = subCategory.SubCategoryName;
                 categoryId.CategoryId = subCategory.CategoryId;
-                categoryId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
-
+                categoryId.EmendatorAdminId = userId;
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = subCategory.SubCategoryId;
                 logs.ItemName = subCategory.SubCategoryName;
                 logs.TableName = "SubCategories";
-                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -175,14 +179,16 @@ namespace AdminPanelV1.Controllers
                 subCategory.State = false;
                 db.SaveChanges();
 
-                var userCookie = Request.Cookies["userCookie"];
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
                 TablesLogs logs = new TablesLogs();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = subCategory.SubCategoryId;
                 logs.ItemName = subCategory.SubCategoryName;
                 logs.TableName = "SubCategories";
-                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.Process = subCategory.SubCategoryName + " " + "Kategorisi" + " " + userName + " " + "tarafından silindi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();

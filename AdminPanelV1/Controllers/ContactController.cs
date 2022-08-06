@@ -43,16 +43,17 @@ namespace AdminPanelV1.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(contact).State = EntityState.Modified;
-                var userCookie = Request.Cookies["userCookie"];
-                contact.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                contact.EmendatorAdminId = userId;
 
                 TablesLogs logs = new TablesLogs();
                 logs.ItemId = contact.ContactId;
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemName = contact.Email;
                 logs.TableName = "Contact";
                 logs.LogDate = DateTime.Now;
-                logs.Process = contact.Email + " " + "iletişim bilgisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = contact.Email + " " + "iletişim bilgisi" + " " + userName + " " + "tarafından güncellendi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 db.SaveChanges();

@@ -17,8 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: Category
         public ActionResult Index()
         {
-
-            var category = db.Categories.Where(x => x.State==true);
+            var category = db.Categories.Where(x => x.State == true);
             return View(category.ToList());
         }
 
@@ -54,7 +53,7 @@ namespace AdminPanelV1.Controllers
             {
                 if (imgUrl != null)
                 {
-                    var userCookie = Request.Cookies["userCookie"];
+                    //var userCookie = Request.Cookies["userCookie"];
 
                     WebImage image = new WebImage(imgUrl.InputStream);
                     FileInfo fileInfo = new FileInfo(imgUrl.FileName);
@@ -62,21 +61,23 @@ namespace AdminPanelV1.Controllers
                     string imgName = Guid.NewGuid() + fileInfo.Extension;
                     image.Resize(600, 400);
                     image.Save("~/Uploads/Category/" + imgName);
-
                     category.ImgUrl = "/Uploads/Category/" + imgName;
 
-                    category.UserId = Convert.ToInt16(userCookie["UserId"]);
+                    var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                    var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
+                    category.UserId = userId;
                     db.Categories.Add(category);
                     db.SaveChanges();
 
                     TablesLogs logs = new TablesLogs();
-                    var cat =db.Categories.OrderByDescending(x => x.CategoryId).FirstOrDefault();
+                    var cat = db.Categories.OrderByDescending(x => x.CategoryId).FirstOrDefault();
                     logs.ItemId = cat.CategoryId;
-                    logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                    logs.UserId = userId;
                     logs.ItemName = cat.CategoryName;
                     logs.TableName = "Categories";
                     logs.LogDate = DateTime.Now;
-                    logs.Process = cat.CategoryName + " " + "kategorisi" + " " + cat.Users.UserId + " " + "tarafından eklendi.";
+                    logs.Process = cat.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından eklendi.";
                     db.TablesLogs.Add(logs);
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -113,7 +114,8 @@ namespace AdminPanelV1.Controllers
         public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl, int id)
         {
             var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
 
             if (ModelState.IsValid)
             {
@@ -133,7 +135,7 @@ namespace AdminPanelV1.Controllers
 
                     categoryId.ImgUrl = "/Uploads/Category/" + imgName;
 
-                    category.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                    category.EmendatorAdminId = userId;
 
 
 
@@ -141,13 +143,15 @@ namespace AdminPanelV1.Controllers
                 categoryId.CategoryName = category.CategoryName;
                 categoryId.Description = category.Description;
 
+
+
                 TablesLogs logs = new TablesLogs();
                 logs.ItemId = category.CategoryId;
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemName = category.CategoryName;
                 logs.TableName = "Categories";
                 logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından güncellendi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -185,17 +189,19 @@ namespace AdminPanelV1.Controllers
                     return HttpNotFound();
                 }
 
-                var userCookie = Request.Cookies["userCookie"];
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
                 category.State = false;
                 db.SaveChanges();
 
                 TablesLogs logs = new TablesLogs();
                 logs.ItemId = category.CategoryId;
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemName = category.CategoryName;
                 logs.TableName = "Categories";
                 logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + " " + "Kategorisi" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.Process = category.CategoryName + " " + "Kategorisi" + " " + userName + " " + "tarafından silindi.";
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
 

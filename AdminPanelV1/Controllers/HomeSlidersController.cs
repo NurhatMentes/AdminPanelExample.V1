@@ -38,7 +38,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Sliders slider, HttpPostedFileBase imgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
             if (imgUrl != null)
@@ -54,11 +55,11 @@ namespace AdminPanelV1.Controllers
                 db.Sliders.Add(slider);
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = slider.SliderId;
                 logs.ItemName = slider.Title;
                 logs.TableName = "Sliders";
-                logs.Process = slider.Title + " " + "Resmi" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.Process = slider.Title + " " + "Resmi" + " " + userName + " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -92,7 +93,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Sliders slider, HttpPostedFileBase ImgUrl, int id)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
             var sliderId = db.Sliders.Where(x => x.SliderId == id).SingleOrDefault();
@@ -118,15 +120,15 @@ namespace AdminPanelV1.Controllers
 
                 sliderId.Title = slider.Title;
                 sliderId.Description = slider.Description;
-                sliderId.EmendatorAdminId= Convert.ToInt16(userCookie["UserId"]);
+                sliderId.EmendatorAdminId= userId;
 
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = slider.SliderId;
                 logs.ItemName = slider.Title;
                 logs.TableName = "Sliders";
-                logs.Process = slider.Title + " " + "Resmi" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.Process = slider.Title + " " + "Resmi" + " " + userName+ " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -161,14 +163,15 @@ namespace AdminPanelV1.Controllers
             slider.State = false;
             db.SaveChanges();
 
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
-            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.UserId = userId;
             logs.ItemId = slider.SliderId;
             logs.ItemName = slider.Title;
             logs.TableName = "Sliders";
-            logs.Process = slider.Title + " " + "Ürünü" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.Process = slider.Title + " " + "Ürünü" + " " + userName + " " + "tarafından silindi.";
             logs.LogDate = DateTime.Now;
             db.TablesLogs.Add(logs);
             db.SaveChanges();
