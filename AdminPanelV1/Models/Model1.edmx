@@ -860,7 +860,7 @@
           </Key>
           <Property Name="UserLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LogDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="Self.FK_UserLog_User" FromRole="UserLogs" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_UserLogs_Users" FromRole="UserLogs" ToRole="Users" />
@@ -877,7 +877,7 @@
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RePassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Auth" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" DefaultValue="true" />
           <NavigationProperty Name="AboutUs" Relationship="Self.FK_AboutUs_Users" FromRole="Users" ToRole="AboutUs" />
           <NavigationProperty Name="Blogs" Relationship="Self.FK_Blogs_Users" FromRole="Users" ToRole="Blogs" />
           <NavigationProperty Name="Categories" Relationship="Self.FK_Categories_Users" FromRole="Users" ToRole="Categories" />

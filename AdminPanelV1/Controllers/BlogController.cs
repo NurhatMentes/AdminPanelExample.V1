@@ -57,7 +57,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Blogs blog, HttpPostedFileBase imgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -74,16 +74,17 @@ namespace AdminPanelV1.Controllers
                     blog.ImgUrl = "/Uploads/Blog/" + imgName;
                 }
 
-                blog.UserId = Convert.ToInt16(userCookie["UserId"]);
                 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
                 db.Blogs.Add(blog);
                 db.SaveChanges();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = blog.BlogId;
                 logs.ItemName = blog.Title;
                 logs.TableName = "Blog";
-                logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                logs.Process = blog.Title + " " + "Bloğu" + " " + userName + " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -119,7 +120,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Blogs blog, int id, HttpPostedFileBase ImgUrl)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -159,17 +161,17 @@ namespace AdminPanelV1.Controllers
                 blogId.Content = blog.Content;
                 blogId.Title = blog.Title;
                 blogId.CategoryId = blog.CategoryId;
-                blogId.UserId = Convert.ToInt16(userCookie["UserId"]);
-                blogId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                blogId.UserId = userId;
+                blogId.EmendatorAdminId = userId;
 
                 db.SaveChanges();
 
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = blog.BlogId;
                 logs.ItemName = blog.Title;
                 logs.TableName = "Blog";
-                logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = blog.Title + " " + "Bloğu" + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -210,14 +212,15 @@ namespace AdminPanelV1.Controllers
             blog.State = false;
             db.SaveChanges();
 
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
-            logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+            logs.UserId = userId;
             logs.ItemId = blog.BlogId;
             logs.ItemName = blog.Title;
             logs.TableName = "Blogs";
-            logs.Process = blog.Title + " " + "Bloğu" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+            logs.Process = blog.Title + " " + "Bloğu" + " " + userName + " " + "tarafından silindi.";
             logs.LogDate = DateTime.Now;
             db.TablesLogs.Add(logs);
             db.SaveChanges();

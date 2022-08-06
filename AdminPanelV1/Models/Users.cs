@@ -17,6 +17,7 @@ namespace AdminPanelV1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Users()
         {
+            this.State = true;
             this.AboutUs = new HashSet<AboutUs>();
             this.Blogs = new HashSet<Blogs>();
             this.Categories = new HashSet<Categories>();
@@ -44,7 +45,7 @@ namespace AdminPanelV1.Models
         public string Password { get; set; }
         public string RePassword { get; set; }
         public string Auth { get; set; }
-        public Nullable<bool> State { get; set; }
+        public bool State { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AboutUs> AboutUs { get; set; }
