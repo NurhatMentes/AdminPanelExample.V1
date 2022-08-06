@@ -85,7 +85,8 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Create( Products products, HttpPostedFileBase imgUrl, HttpPostedFileBase uploadFile)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
             TablesLogs logs = new TablesLogs();
 
            
@@ -110,17 +111,17 @@ namespace AdminPanelV1.Controllers
 
                     products.OldPrice = 0;
                     products.Date = DateTime.Now;
-                    products.UserId = Convert.ToInt16(userCookie["UserId"]); ;
+                    products.UserId = userId;
 
 
                     db.Products.Add(products);
                     db.SaveChanges();
 
-                    logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                    logs.UserId = userId;
                     logs.ItemId = products.ProductId;
                     logs.ItemName = products.Title;
                     logs.TableName = "Products";
-                    logs.Process = products.Title + " " + "Ürünü" + " " + userCookie["FullName"] + " " + "tarafından eklendi.";
+                    logs.Process = products.Title + " " + "Ürünü" + " " + userName + " " + "tarafından eklendi.";
                     logs.LogDate = DateTime.Now;
                     db.TablesLogs.Add(logs);
                     db.SaveChanges();
@@ -162,7 +163,7 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(Products product, HttpPostedFileBase ImgUrl, int id, HttpPostedFileBase uploadFile)
         {
-            var userCookie = Request.Cookies["userCookie"];
+            
             TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
@@ -219,21 +220,24 @@ namespace AdminPanelV1.Controllers
                     ViewBag.SubCategory = "Lütfen kategori seçiniz";
                 }
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+
                 productId.OldPrice = productId.Price;
                 productId.Price = product.Price;
                 productId.Stock = product.Stock;
                 productId.Color = product.Color;
                 productId.UpdateDate = DateTime.Now;
                 productId.Tag = product.Tag;
-                productId.EmendatorAdminId = Convert.ToInt16(userCookie["UserId"]);
+                productId.EmendatorAdminId = userId;
                 db.SaveChanges();
 
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = productId.ProductId;
                 logs.ItemName = productId.Title;
                 logs.TableName = "Products";
-                logs.Process = productId.Title + " " + "Ürünü" + " " + userCookie["FullName"] + " " + "tarafından güncellendi.";
+                logs.Process = productId.Title + " " + "Ürünü" + " " + userName + " " + "tarafından güncellendi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
@@ -277,14 +281,16 @@ namespace AdminPanelV1.Controllers
                 product.State = false;
                 db.SaveChanges();
 
-                var userCookie = Request.Cookies["userCookie"];
+
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
                 TablesLogs logs = new TablesLogs();
 
-                logs.UserId = Convert.ToInt16(userCookie["UserId"]);
+                logs.UserId = userId;
                 logs.ItemId = product.ProductId;
                 logs.ItemName = product.Title;
                 logs.TableName = "Products";
-                logs.Process = product.Title + " " + "Ürünü" + " " + userCookie["FullName"] + " " + "tarafından silindi.";
+                logs.Process = product.Title + " " + "Ürünü" + " " + userName + " " + "tarafından silindi.";
                 logs.LogDate = DateTime.Now;
                 db.TablesLogs.Add(logs);
                 db.SaveChanges();
