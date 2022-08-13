@@ -12,11 +12,13 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HomeVideo
+    public partial class SubCategory
     {
-        public int HomeVideoId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string VideoUrl { get; set; }
+        public int SubCategoryId { get; set; }
+        public Nullable<int> CategoryId { get; set; }
+        public string SubCategoryName { get; set; }
+        public string ImgUrl { get; set; }
+    
+        public virtual Category Category { get; set; }
     }
 }

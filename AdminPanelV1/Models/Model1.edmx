@@ -10,47 +10,58 @@
             <PropertyRef Name="AboutUsId" />
           </Key>
           <Property Name="AboutUsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" />
         </EntityType>
-        <EntityType Name="Blogs">
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Job" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="10" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RePassword" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Auth" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AdminLog">
+          <Key>
+            <PropertyRef Name="AdminLogId" />
+          </Key>
+          <Property Name="AdminLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdminId" Type="int" Nullable="false" />
+          <Property Name="State" Type="nvarchar" MaxLength="20" />
+          <Property Name="LogDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Blog">
           <Key>
             <PropertyRef Name="BlogId" />
           </Key>
           <Property Name="BlogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
-          <Property Name="EmendatorAdminId" Type="int" />
-          <Property Name="CategoryId" Type="int" Nullable="false" />
-          <Property Name="SubCategoryId" Type="int" />
-          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CategoryId" Type="int" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="Categories">
+        <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
           </Key>
           <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
-          <Property Name="EmendatorAdminId" Type="int" />
-          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" />
           <Property Name="Description" Type="nvarchar" MaxLength="50" />
           <Property Name="ImgUrl" Type="ntext" />
-          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="Comments">
+        <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="CommentId" />
           </Key>
           <Property Name="CommentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BlogId" Type="int" />
-          <Property Name="ProductId" Type="int" />
+          <Property Name="BlogId" Type="int" Nullable="false" />
           <Property Name="FirstLastName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CommentContent" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Date" Type="datetime" />
           <Property Name="Confirmation" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
@@ -58,7 +69,6 @@
             <PropertyRef Name="ContactId" />
           </Key>
           <Property Name="ContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Adress" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Tel" Type="nvarchar" MaxLength="10" />
           <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
@@ -73,90 +83,47 @@
             <PropertyRef Name="HomeVideoId" />
           </Key>
           <Property Name="HomeVideoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Title" Type="nvarchar" MaxLength="70" />
           <Property Name="Description" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="VideoUrl" Type="nvarchar(max)" />
         </EntityType>
-        <EntityType Name="Products">
-          <Key>
-            <PropertyRef Name="ProductId" />
-          </Key>
-          <Property Name="ProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CategoryId" Type="int" Nullable="false" />
-          <Property Name="SubCategoryId" Type="int" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Price" Type="float" Nullable="false" />
-          <Property Name="OldPrice" Type="float" />
-          <Property Name="Stock" Type="int" />
-          <Property Name="Color" Type="nvarchar" MaxLength="20" />
-          <Property Name="File" Type="ntext" />
-          <Property Name="Content" Type="ntext" Nullable="false" />
-          <Property Name="Date" Type="datetime" Nullable="false" />
-          <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="EmendatorAdminId" Type="int" />
-          <Property Name="Tag" Type="ntext" Nullable="false" />
-          <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="State" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ProductSliders">
-          <Key>
-            <PropertyRef Name="SliderId" />
-          </Key>
-          <Property Name="SliderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ProductId" Type="int" Nullable="false" />
-          <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="State" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Services">
+        <EntityType Name="Service">
           <Key>
             <PropertyRef Name="ServiceId" />
           </Key>
           <Property Name="ServiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Title" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Tag" Type="nvarchar(max)" />
           <Property Name="ImgUrl" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SiteIdentity">
           <Key>
             <PropertyRef Name="IdentityId" />
           </Key>
           <Property Name="IdentityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" />
           <Property Name="Keywords" Type="nvarchar" MaxLength="200" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="LogoUrl" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" />
         </EntityType>
-        <EntityType Name="Sliders">
+        <EntityType Name="Slider">
           <Key>
             <PropertyRef Name="SliderId" />
           </Key>
           <Property Name="SliderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
-          <Property Name="EmendatorAdminId" Type="int" />
-          <Property Name="Title" Type="nvarchar" MaxLength="70" />
+          <Property Name="Title" Type="nvarchar" MaxLength="30" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="ImgUrl" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="SubCategories">
+        <EntityType Name="SubCategory">
           <Key>
             <PropertyRef Name="SubCategoryId" />
           </Key>
           <Property Name="SubCategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
-          <Property Name="EmendatorAdminId" Type="int" />
           <Property Name="CategoryId" Type="int" />
           <Property Name="SubCategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ImgUrl" Type="ntext" />
-          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -176,458 +143,68 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="TablesLogs">
-          <Key>
-            <PropertyRef Name="TablesLogsId" />
-          </Key>
-          <Property Name="TablesLogsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="ItemId" Type="int" Nullable="false" />
-          <Property Name="TableName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="ItemName" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="Process" Type="nvarchar" MaxLength="500" Nullable="false" />
-          <Property Name="LogDate" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserLogs">
-          <Key>
-            <PropertyRef Name="UserLogId" />
-          </Key>
-          <Property Name="UserLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="State" Type="nvarchar" MaxLength="50" />
-          <Property Name="LogDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Job" Type="nvarchar" MaxLength="50" />
-          <Property Name="Phone" Type="nvarchar" MaxLength="11" />
-          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="RePassword" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Auth" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="State" Type="bit" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_AboutUs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="AboutUs" Type="Self.AboutUs" Multiplicity="*" />
+        <Association Name="FK_AdminLog_Admin">
+          <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
+          <End Role="AdminLog" Type="Self.AdminLog" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
+            <Principal Role="Admin">
+              <PropertyRef Name="AdminId" />
             </Principal>
-            <Dependent Role="AboutUs">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blog_Category">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Categories">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blog_SubCategory">
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="0..1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SubCategories">
-              <PropertyRef Name="SubCategoryId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="SubCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blogs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Categories_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Categories">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Categories_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Categories">
-              <PropertyRef Name="EmendatorAdminId" />
+            <Dependent Role="AdminLog">
+              <PropertyRef Name="AdminId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comment_Blog">
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="0..1" />
-          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Blogs">
+            <Principal Role="Blog">
               <PropertyRef Name="BlogId" />
             </Principal>
-            <Dependent Role="Comments">
+            <Dependent Role="Comment">
               <PropertyRef Name="BlogId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comments_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
-          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="Comments">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Contact_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Contact" Type="Self.Contact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Contact">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_HomeVideo_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="HomeVideo" Type="Self.HomeVideo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="HomeVideo">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Categories">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Categories">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_SubCategories">
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="0..1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SubCategories">
-              <PropertyRef Name="SubCategoryId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="SubCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSliders_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="1" />
-          <End Role="ProductSliders" Type="Self.ProductSliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="ProductSliders">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Services_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Services" Type="Self.Services" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Services">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Services_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Services" Type="Self.Services" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Services">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SiteIdentity_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SiteIdentity" Type="Self.SiteIdentity" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SiteIdentity">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Sliders_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Sliders" Type="Self.Sliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Sliders">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Sliders_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Sliders" Type="Self.Sliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Sliders">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategories_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SubCategories">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategories_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SubCategories">
-              <PropertyRef Name="EmendatorAdminId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SubCategory_Category">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Categories">
+            <Principal Role="Category">
               <PropertyRef Name="CategoryId" />
             </Principal>
-            <Dependent Role="SubCategories">
+            <Dependent Role="SubCategory">
               <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TablesLogs_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="TablesLogs" Type="Self.TablesLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="TablesLogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserLog_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserLogs" Type="Self.UserLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserLogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserLogs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserLogs" Type="Self.UserLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserLogs">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="AdminV1ModelStoreContainer">
           <EntitySet Name="AboutUs" EntityType="Self.AboutUs" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Blogs" EntityType="Self.Blogs" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AdminLog" EntityType="Self.AdminLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Blog" EntityType="Self.Blog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HomeVideo" EntityType="Self.HomeVideo" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ProductSliders" EntityType="Self.ProductSliders" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Services" EntityType="Self.Services" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SiteIdentity" EntityType="Self.SiteIdentity" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Sliders" EntityType="Self.Sliders" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SubCategories" EntityType="Self.SubCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Slider" EntityType="Self.Slider" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubCategory" EntityType="Self.SubCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemAdmin" EntityType="Self.SystemAdmin" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TablesLogs" EntityType="Self.TablesLogs" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserLogs" EntityType="Self.UserLogs" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_AboutUs_Users" Association="Self.FK_AboutUs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="AboutUs" EntitySet="AboutUs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Blog_Category" Association="Self.FK_Blog_Category">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="Blogs" EntitySet="Blogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Blog_SubCategory" Association="Self.FK_Blog_SubCategory">
-            <End Role="SubCategories" EntitySet="SubCategories" />
-            <End Role="Blogs" EntitySet="Blogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Blogs_Users" Association="Self.FK_Blogs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Blogs" EntitySet="Blogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Categories_Users" Association="Self.FK_Categories_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Categories" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Categories_Users1" Association="Self.FK_Categories_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Categories" EntitySet="Categories" />
+          <AssociationSet Name="FK_AdminLog_Admin" Association="Self.FK_AdminLog_Admin">
+            <End Role="Admin" EntitySet="Admin" />
+            <End Role="AdminLog" EntitySet="AdminLog" />
           </AssociationSet>
           <AssociationSet Name="FK_Comment_Blog" Association="Self.FK_Comment_Blog">
-            <End Role="Blogs" EntitySet="Blogs" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comments_Products" Association="Self.FK_Comments_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Contact_Users" Association="Self.FK_Contact_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Contact" EntitySet="Contact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_HomeVideo_Users" Association="Self.FK_HomeVideo_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="HomeVideo" EntitySet="HomeVideo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Categories" Association="Self.FK_Products_Categories">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_SubCategories" Association="Self.FK_Products_SubCategories">
-            <End Role="SubCategories" EntitySet="SubCategories" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Users" Association="Self.FK_Products_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSliders_Products" Association="Self.FK_ProductSliders_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="ProductSliders" EntitySet="ProductSliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Services_Users" Association="Self.FK_Services_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Services" EntitySet="Services" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Services_Users1" Association="Self.FK_Services_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Services" EntitySet="Services" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SiteIdentity_Users" Association="Self.FK_SiteIdentity_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SiteIdentity" EntitySet="SiteIdentity" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Sliders_Users" Association="Self.FK_Sliders_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Sliders" EntitySet="Sliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Sliders_Users1" Association="Self.FK_Sliders_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Sliders" EntitySet="Sliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubCategories_Users" Association="Self.FK_SubCategories_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubCategories_Users1" Association="Self.FK_SubCategories_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
+            <End Role="Blog" EntitySet="Blog" />
+            <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
           <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TablesLogs_User" Association="Self.FK_TablesLogs_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="TablesLogs" EntitySet="TablesLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserLog_User" Association="Self.FK_UserLog_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserLogs" EntitySet="UserLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserLogs_Users" Association="Self.FK_UserLogs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserLogs" EntitySet="UserLogs" />
+            <End Role="Category" EntitySet="Category" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -639,67 +216,27 @@
             <PropertyRef Name="AboutUsId" />
           </Key>
           <Property Name="AboutUsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_AboutUs_Users" FromRole="AboutUs" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Blogs">
+        <EntityType Name="Admin">
           <Key>
-            <PropertyRef Name="BlogId" />
+            <PropertyRef Name="AdminId" />
           </Key>
-          <Property Name="BlogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="SubCategoryId" Type="Int32" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="State" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Blog_Category" FromRole="Blogs" ToRole="Categories" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.FK_Blog_SubCategory" FromRole="Blogs" ToRole="SubCategories" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Blogs_Users" FromRole="Blogs" ToRole="Users" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Blog" FromRole="Blogs" ToRole="Comments" />
-        </EntityType>
-        <EntityType Name="Categories">
-          <Key>
-            <PropertyRef Name="CategoryId" />
-          </Key>
-          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
-          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" DefaultValue="true" Nullable="false" />
-          <NavigationProperty Name="Blogs" Relationship="Self.FK_Blog_Category" FromRole="Categories" ToRole="Blogs" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Categories_Users" FromRole="Categories" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_Categories_Users1" FromRole="Categories" ToRole="Users" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Categories" FromRole="Categories" ToRole="Products" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.FK_SubCategory_Category" FromRole="Categories" ToRole="SubCategories" />
-        </EntityType>
-        <EntityType Name="Comments">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BlogId" Type="Int32" />
-          <Property Name="ProductId" Type="Int32" />
-          <Property Name="FirstLastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CommentContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Confirmation" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Blogs" Relationship="Self.FK_Comment_Blog" FromRole="Comments" ToRole="Blogs" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Comments_Products" FromRole="Comments" ToRole="Products" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="AdminId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Job" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RePassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Auth" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AdminLog" Relationship="AdminV1Model.FK_AdminLog_Admin" FromRole="Admin" ToRole="AdminLog" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactId" />
           </Key>
           <Property Name="ContactId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
           <Property Name="Adress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Tel" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
@@ -708,124 +245,44 @@
           <Property Name="Facebook" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Twitter" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Instagram" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Contact_Users" FromRole="Contact" ToRole="Users" />
         </EntityType>
         <EntityType Name="HomeVideo">
           <Key>
             <PropertyRef Name="HomeVideoId" />
           </Key>
           <Property Name="HomeVideoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
           <Property Name="Title" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="VideoUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_HomeVideo_Users" FromRole="HomeVideo" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Products">
-          <Key>
-            <PropertyRef Name="ProductId" />
-          </Key>
-          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="SubCategoryId" Type="Int32" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Double" Nullable="false" />
-          <Property Name="OldPrice" Type="Double" />
-          <Property Name="Stock" Type="Int32" />
-          <Property Name="Color" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="File" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
-          <Property Name="Tag" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Products_Categories" FromRole="Products" ToRole="Categories" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_Products" FromRole="Products" ToRole="Comments" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.FK_Products_SubCategories" FromRole="Products" ToRole="SubCategories" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Products_Users" FromRole="Products" ToRole="Users" />
-          <NavigationProperty Name="ProductSliders" Relationship="Self.FK_ProductSliders_Products" FromRole="Products" ToRole="ProductSliders" />
-          <Property Name="State" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ProductSliders">
-          <Key>
-            <PropertyRef Name="SliderId" />
-          </Key>
-          <Property Name="SliderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_ProductSliders_Products" FromRole="ProductSliders" ToRole="Products" />
-          <Property Name="State" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Services">
+        <EntityType Name="Service">
           <Key>
             <PropertyRef Name="ServiceId" />
           </Key>
           <Property Name="ServiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
           <Property Name="Title" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Tag" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Services_Users" FromRole="Services" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_Services_Users1" FromRole="Services" ToRole="Users" />
         </EntityType>
         <EntityType Name="SiteIdentity">
           <Key>
             <PropertyRef Name="IdentityId" />
           </Key>
           <Property Name="IdentityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Keywords" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="LogoUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_SiteIdentity_Users" FromRole="SiteIdentity" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Sliders">
+        <EntityType Name="Slider">
           <Key>
             <PropertyRef Name="SliderId" />
           </Key>
           <Property Name="SliderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
-          <Property Name="Title" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" Nullable="false" DefaultValue="true" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Sliders_Users" FromRole="Sliders" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_Sliders_Users1" FromRole="Sliders" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="SubCategories">
-          <Key>
-            <PropertyRef Name="SubCategoryId" />
-          </Key>
-          <Property Name="SubCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="EmendatorAdminId" Type="Int32" />
-          <Property Name="CategoryId" Type="Int32" />
-          <Property Name="SubCategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Blogs" Relationship="Self.FK_Blog_SubCategory" FromRole="SubCategories" ToRole="Blogs" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_SubCategory_Category" FromRole="SubCategories" ToRole="Categories" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_SubCategories" FromRole="SubCategories" ToRole="Products" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_SubCategories_Users" FromRole="SubCategories" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_SubCategories_Users1" FromRole="SubCategories" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="SystemAdmin">
           <Key>
@@ -835,480 +292,133 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="TablesLogs">
-          <Key>
-            <PropertyRef Name="TablesLogsId" />
-          </Key>
-          <Property Name="TablesLogsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="ItemId" Type="Int32" Nullable="false" />
-          <Property Name="TableName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ItemName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Process" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LogDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_TablesLogs_User" FromRole="TablesLogs" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="UserLogs">
-          <Key>
-            <PropertyRef Name="UserLogId" />
-          </Key>
-          <Property Name="UserLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="LogDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_UserLog_User" FromRole="UserLogs" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_UserLogs_Users" FromRole="UserLogs" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Job" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RePassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Auth" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="State" Type="Boolean" Nullable="false" DefaultValue="true" />
-          <NavigationProperty Name="AboutUs" Relationship="Self.FK_AboutUs_Users" FromRole="Users" ToRole="AboutUs" />
-          <NavigationProperty Name="Blogs" Relationship="Self.FK_Blogs_Users" FromRole="Users" ToRole="Blogs" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Categories_Users" FromRole="Users" ToRole="Categories" />
-          <NavigationProperty Name="Categories1" Relationship="Self.FK_Categories_Users1" FromRole="Users" ToRole="Categories" />
-          <NavigationProperty Name="Contact" Relationship="Self.FK_Contact_Users" FromRole="Users" ToRole="Contact" />
-          <NavigationProperty Name="HomeVideo" Relationship="Self.FK_HomeVideo_Users" FromRole="Users" ToRole="HomeVideo" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Users" FromRole="Users" ToRole="Products" />
-          <NavigationProperty Name="Services" Relationship="Self.FK_Services_Users" FromRole="Users" ToRole="Services" />
-          <NavigationProperty Name="Services1" Relationship="Self.FK_Services_Users1" FromRole="Users" ToRole="Services" />
-          <NavigationProperty Name="SiteIdentity" Relationship="Self.FK_SiteIdentity_Users" FromRole="Users" ToRole="SiteIdentity" />
-          <NavigationProperty Name="Sliders" Relationship="Self.FK_Sliders_Users" FromRole="Users" ToRole="Sliders" />
-          <NavigationProperty Name="Sliders1" Relationship="Self.FK_Sliders_Users1" FromRole="Users" ToRole="Sliders" />
-          <NavigationProperty Name="SubCategories" Relationship="Self.FK_SubCategories_Users" FromRole="Users" ToRole="SubCategories" />
-          <NavigationProperty Name="SubCategories1" Relationship="Self.FK_SubCategories_Users1" FromRole="Users" ToRole="SubCategories" />
-          <NavigationProperty Name="TablesLogs" Relationship="Self.FK_TablesLogs_User" FromRole="Users" ToRole="TablesLogs" />
-          <NavigationProperty Name="UserLogs" Relationship="Self.FK_UserLog_User" FromRole="Users" ToRole="UserLogs" />
-          <NavigationProperty Name="UserLogs1" Relationship="Self.FK_UserLogs_Users" FromRole="Users" ToRole="UserLogs" />
-        </EntityType>
-        <Association Name="FK_AboutUs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="AboutUs" Type="Self.AboutUs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="AboutUs">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blog_Category">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Categories">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blog_SubCategory">
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="0..1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SubCategories">
-              <PropertyRef Name="SubCategoryId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="SubCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Blogs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Blogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comment_Blog">
-          <End Role="Blogs" Type="Self.Blogs" Multiplicity="0..1" />
-          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Blogs">
-              <PropertyRef Name="BlogId" />
-            </Principal>
-            <Dependent Role="Comments">
-              <PropertyRef Name="BlogId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Categories_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Categories">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Categories_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Categories" Type="Self.Categories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Categories">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Categories">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Categories">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategory_Category">
-          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Categories">
-              <PropertyRef Name="CategoryId" />
-            </Principal>
-            <Dependent Role="SubCategories">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comments_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
-          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="Comments">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Contact_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Contact" Type="Self.Contact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Contact">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_HomeVideo_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="HomeVideo" Type="Self.HomeVideo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="HomeVideo">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_SubCategories">
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="0..1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SubCategories">
-              <PropertyRef Name="SubCategoryId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="SubCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSliders_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="1" />
-          <End Role="ProductSliders" Type="Self.ProductSliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="ProductSliders">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Services_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Services" Type="Self.Services" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Services">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Services_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Services" Type="Self.Services" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Services">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SiteIdentity_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SiteIdentity" Type="Self.SiteIdentity" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SiteIdentity">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Sliders_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Sliders" Type="Self.Sliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Sliders">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Sliders_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Sliders" Type="Self.Sliders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Sliders">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategories_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SubCategories">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubCategories_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="SubCategories" Type="Self.SubCategories" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="SubCategories">
-              <PropertyRef Name="EmendatorAdminId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TablesLogs_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="TablesLogs" Type="Self.TablesLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="TablesLogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserLog_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserLogs" Type="Self.UserLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserLogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserLogs_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserLogs" Type="Self.UserLogs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserLogs">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="AdminV1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AboutUs" EntityType="Self.AboutUs" />
-          <EntitySet Name="Blogs" EntityType="Self.Blogs" />
-          <EntitySet Name="Categories" EntityType="Self.Categories" />
-          <EntitySet Name="Comments" EntityType="Self.Comments" />
+          <EntitySet Name="Admin" EntityType="Self.Admin" />
           <EntitySet Name="Contact" EntityType="Self.Contact" />
           <EntitySet Name="HomeVideo" EntityType="Self.HomeVideo" />
-          <EntitySet Name="Products" EntityType="Self.Products" />
-          <EntitySet Name="ProductSliders" EntityType="Self.ProductSliders" />
-          <EntitySet Name="Services" EntityType="Self.Services" />
+          <EntitySet Name="Service" EntityType="Self.Service" />
           <EntitySet Name="SiteIdentity" EntityType="Self.SiteIdentity" />
-          <EntitySet Name="Sliders" EntityType="Self.Sliders" />
-          <EntitySet Name="SubCategories" EntityType="Self.SubCategories" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Slider" EntityType="Self.Slider" />
           <EntitySet Name="SystemAdmin" EntityType="Self.SystemAdmin" />
-          <EntitySet Name="TablesLogs" EntityType="Self.TablesLogs" />
-          <EntitySet Name="UserLogs" EntityType="Self.UserLogs" />
-          <EntitySet Name="Users" EntityType="Self.Users" />
-          <AssociationSet Name="FK_AboutUs_Users" Association="Self.FK_AboutUs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="AboutUs" EntitySet="AboutUs" />
+          <EntitySet Name="Category" EntityType="AdminV1Model.Category" />
+          <EntitySet Name="Comment" EntityType="AdminV1Model.Comment" />
+          <EntitySet Name="Blog" EntityType="AdminV1Model.Blog" />
+          <EntitySet Name="sysdiagrams" EntityType="AdminV1Model.sysdiagrams" />
+          <AssociationSet Name="FK_Comment_Blog" Association="AdminV1Model.FK_Comment_Blog">
+            <End Role="Blog" EntitySet="Blog" />
+            <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
-          <AssociationSet Name="FK_Blog_Category" Association="Self.FK_Blog_Category">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="Blogs" EntitySet="Blogs" />
+          <EntitySet Name="SubCategory" EntityType="AdminV1Model.SubCategory" />
+          <AssociationSet Name="FK_SubCategory_Category" Association="AdminV1Model.FK_SubCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
           </AssociationSet>
-          <AssociationSet Name="FK_Blog_SubCategory" Association="Self.FK_Blog_SubCategory">
-            <End Role="SubCategories" EntitySet="SubCategories" />
-            <End Role="Blogs" EntitySet="Blogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Blogs_Users" Association="Self.FK_Blogs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Blogs" EntitySet="Blogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comment_Blog" Association="Self.FK_Comment_Blog">
-            <End Role="Blogs" EntitySet="Blogs" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Categories_Users" Association="Self.FK_Categories_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Categories" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Categories_Users1" Association="Self.FK_Categories_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Categories" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Categories" Association="Self.FK_Products_Categories">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
-            <End Role="Categories" EntitySet="Categories" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comments_Products" Association="Self.FK_Comments_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Contact_Users" Association="Self.FK_Contact_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Contact" EntitySet="Contact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_HomeVideo_Users" Association="Self.FK_HomeVideo_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="HomeVideo" EntitySet="HomeVideo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_SubCategories" Association="Self.FK_Products_SubCategories">
-            <End Role="SubCategories" EntitySet="SubCategories" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Users" Association="Self.FK_Products_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSliders_Products" Association="Self.FK_ProductSliders_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="ProductSliders" EntitySet="ProductSliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Services_Users" Association="Self.FK_Services_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Services" EntitySet="Services" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Services_Users1" Association="Self.FK_Services_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Services" EntitySet="Services" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SiteIdentity_Users" Association="Self.FK_SiteIdentity_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SiteIdentity" EntitySet="SiteIdentity" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Sliders_Users" Association="Self.FK_Sliders_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Sliders" EntitySet="Sliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Sliders_Users1" Association="Self.FK_Sliders_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Sliders" EntitySet="Sliders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubCategories_Users" Association="Self.FK_SubCategories_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubCategories_Users1" Association="Self.FK_SubCategories_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="SubCategories" EntitySet="SubCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TablesLogs_User" Association="Self.FK_TablesLogs_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="TablesLogs" EntitySet="TablesLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserLog_User" Association="Self.FK_UserLog_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserLogs" EntitySet="UserLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserLogs_Users" Association="Self.FK_UserLogs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserLogs" EntitySet="UserLogs" />
+          <EntitySet Name="AdminLog" EntityType="AdminV1Model.AdminLog" />
+          <AssociationSet Name="FK_AdminLog_Admin" Association="AdminV1Model.FK_AdminLog_Admin">
+            <End Role="Admin" EntitySet="Admin" />
+            <End Role="AdminLog" EntitySet="AdminLog" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SubCategory" Relationship="AdminV1Model.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlogId" Type="Int32" Nullable="false" />
+          <Property Name="FirstLastName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Confirmation" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Blog" Relationship="AdminV1Model.FK_Comment_Blog" FromRole="Comment" ToRole="Blog" />
+        </EntityType>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="BlogId" />
+          </Key>
+          <Property Name="BlogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ImgUrl" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comment" Relationship="AdminV1Model.FK_Comment_Blog" FromRole="Blog" ToRole="Comment" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Comment_Blog">
+          <End Type="AdminV1Model.Blog" Role="Blog" Multiplicity="1" />
+          <End Type="AdminV1Model.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Blog">
+              <PropertyRef Name="BlogId" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="BlogId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SubCategory">
+          <Key>
+            <PropertyRef Name="SubCategoryId" />
+          </Key>
+          <Property Name="SubCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" />
+          <Property Name="SubCategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category" Relationship="AdminV1Model.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
+        </EntityType>
+        <Association Name="FK_SubCategory_Category">
+          <End Type="AdminV1Model.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="AdminV1Model.SubCategory" Role="SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AdminLog">
+          <Key>
+            <PropertyRef Name="AdminLogId" />
+          </Key>
+          <Property Name="AdminLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Admin" Relationship="AdminV1Model.FK_AdminLog_Admin" FromRole="AdminLog" ToRole="Admin" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LogDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_AdminLog_Admin">
+          <End Type="AdminV1Model.Admin" Role="Admin" Multiplicity="1" />
+          <End Type="AdminV1Model.AdminLog" Role="AdminLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Admin">
+              <PropertyRef Name="AdminId" />
+            </Principal>
+            <Dependent Role="AdminLog">
+              <PropertyRef Name="AdminId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1319,51 +429,21 @@
             <EntityTypeMapping TypeName="AdminV1Model.AboutUs">
               <MappingFragment StoreEntitySet="AboutUs">
                 <ScalarProperty Name="AboutUsId" ColumnName="AboutUsId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="State" ColumnName="State" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Blogs">
-            <EntityTypeMapping TypeName="AdminV1Model.Blogs">
-              <MappingFragment StoreEntitySet="Blogs">
-                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="AdminV1Model.Categories">
-              <MappingFragment StoreEntitySet="Categories">
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Comments">
-            <EntityTypeMapping TypeName="AdminV1Model.Comments">
-              <MappingFragment StoreEntitySet="Comments">
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
-                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="FirstLastName" ColumnName="FirstLastName" />
+          <EntitySetMapping Name="Admin">
+            <EntityTypeMapping TypeName="AdminV1Model.Admin">
+              <MappingFragment StoreEntitySet="Admin">
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="Job" ColumnName="Job" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
-                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="RePassword" ColumnName="RePassword" />
+                <ScalarProperty Name="Auth" ColumnName="Auth" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1371,7 +451,6 @@
             <EntityTypeMapping TypeName="AdminV1Model.Contact">
               <MappingFragment StoreEntitySet="Contact">
                 <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Adress" ColumnName="Adress" />
                 <ScalarProperty Name="Tel" ColumnName="Tel" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -1387,57 +466,20 @@
             <EntityTypeMapping TypeName="AdminV1Model.HomeVideo">
               <MappingFragment StoreEntitySet="HomeVideo">
                 <ScalarProperty Name="HomeVideoId" ColumnName="HomeVideoId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="VideoUrl" ColumnName="VideoUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="AdminV1Model.Products">
-              <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
-                <ScalarProperty Name="Stock" ColumnName="Stock" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="File" ColumnName="File" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
-                <ScalarProperty Name="Tag" ColumnName="Tag" />
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductSliders">
-            <EntityTypeMapping TypeName="AdminV1Model.ProductSliders">
-              <MappingFragment StoreEntitySet="ProductSliders">
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="SliderId" ColumnName="SliderId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Services">
-            <EntityTypeMapping TypeName="AdminV1Model.Services">
-              <MappingFragment StoreEntitySet="Services">
+          <EntitySetMapping Name="Service">
+            <EntityTypeMapping TypeName="AdminV1Model.Service">
+              <MappingFragment StoreEntitySet="Service">
                 <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Tag" ColumnName="Tag" />
                 <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1445,49 +487,20 @@
             <EntityTypeMapping TypeName="AdminV1Model.SiteIdentity">
               <MappingFragment StoreEntitySet="SiteIdentity">
                 <ScalarProperty Name="IdentityId" ColumnName="IdentityId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Keywords" ColumnName="Keywords" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="LogoUrl" ColumnName="LogoUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Sliders">
-            <EntityTypeMapping TypeName="AdminV1Model.Sliders">
-              <MappingFragment StoreEntitySet="Sliders">
+          <EntitySetMapping Name="Slider">
+            <EntityTypeMapping TypeName="AdminV1Model.Slider">
+              <MappingFragment StoreEntitySet="Slider">
                 <ScalarProperty Name="SliderId" ColumnName="SliderId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SubCategories">
-            <EntityTypeMapping TypeName="AdminV1Model.SubCategories">
-              <MappingFragment StoreEntitySet="SubCategories">
-                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="EmendatorAdminId" ColumnName="EmendatorAdminId" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="SubCategoryName" ColumnName="SubCategoryName" />
-                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
-                <ScalarProperty Name="State" ColumnName="State" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="AdminV1Model.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1500,41 +513,67 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TablesLogs">
-            <EntityTypeMapping TypeName="AdminV1Model.TablesLogs">
-              <MappingFragment StoreEntitySet="TablesLogs">
-                <ScalarProperty Name="TablesLogsId" ColumnName="TablesLogsId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
-                <ScalarProperty Name="TableName" ColumnName="TableName" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="Process" ColumnName="Process" />
-                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="AdminV1Model.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserLogs">
-            <EntityTypeMapping TypeName="AdminV1Model.UserLogs">
-              <MappingFragment StoreEntitySet="UserLogs">
-                <ScalarProperty Name="UserLogId" ColumnName="UserLogId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="AdminV1Model.Users">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="Job" ColumnName="Job" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <EntitySetMapping Name="Comment">
+            <EntityTypeMapping TypeName="AdminV1Model.Comment">
+              <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
+                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="RePassword" ColumnName="RePassword" />
-                <ScalarProperty Name="Auth" ColumnName="Auth" />
+                <ScalarProperty Name="FirstLastName" ColumnName="FirstLastName" />
+                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Blog">
+            <EntityTypeMapping TypeName="AdminV1Model.Blog">
+              <MappingFragment StoreEntitySet="Blog">
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="AdminV1Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubCategory">
+            <EntityTypeMapping TypeName="AdminV1Model.SubCategory">
+              <MappingFragment StoreEntitySet="SubCategory">
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+                <ScalarProperty Name="SubCategoryName" ColumnName="SubCategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdminLog">
+            <EntityTypeMapping TypeName="AdminV1Model.AdminLog">
+              <MappingFragment StoreEntitySet="AdminLog">
+                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
                 <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="AdminLogId" ColumnName="AdminLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -12,11 +12,13 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HomeVideo
+    public partial class AdminLog
     {
-        public int HomeVideoId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string VideoUrl { get; set; }
+        public int AdminLogId { get; set; }
+        public int AdminId { get; set; }
+        public string State { get; set; }
+        public Nullable<System.DateTime> LogDate { get; set; }
+    
+        public virtual Admin Admin { get; set; }
     }
 }

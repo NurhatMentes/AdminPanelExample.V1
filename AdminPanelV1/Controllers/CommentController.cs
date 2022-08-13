@@ -16,7 +16,7 @@ namespace AdminPanelV1.Controllers
         // GET: Comment
         public ActionResult Index()
         {
-            var comment = db.Comments.Include("Blogs").Include("Products");
+            var comment = db.Comment.Include("Blog");
             return View(comment.ToList());
         }
 
@@ -27,12 +27,12 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comments comment = db.Comments.Find(id);
+            Comment comment = db.Comment.Find(id);
             if (comment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProductId = new SelectList(db.Blogs, "BlogId", "Title", comment.BlogId);
+            ViewBag.ProductId = new SelectList(db.Blog, "BlogId", "Title", comment.BlogId);
             return View(comment);
         }
 
@@ -41,9 +41,9 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( Comments comment,int id)
+        public ActionResult Edit([Bind(Include = "CommentId,BlogId,FirstLastName,Email,CommentContent,Confirmation")] Comment comment,int id)
         {
-            var commentId = db.Comments.Find(id);
+            var commentId = db.Comment.Find(id);
 
             if (ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace AdminPanelV1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProductId = new SelectList(db.Blogs, "BlogId", "Title", comment.BlogId);
+            ViewBag.ProductId = new SelectList(db.Blog, "BlogId", "Title", comment.BlogId);
             return View(comment);
         }
 
@@ -62,7 +62,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comments comment = db.Comments.Find(id);
+            Comment comment = db.Comment.Find(id);
             if (comment == null)
             {
                 return HttpNotFound();
@@ -75,8 +75,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Comments comment = db.Comments.Find(id);
-            db.Comments.Remove(comment);
+            Comment comment = db.Comment.Find(id);
+            db.Comment.Remove(comment);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
