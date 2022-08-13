@@ -26,18 +26,21 @@ namespace AdminPanelV1.Models
         }
     
         public virtual DbSet<AboutUs> AboutUs { get; set; }
-        public virtual DbSet<Admin> Admin { get; set; }
+        public virtual DbSet<Blogs> Blogs { get; set; }
+        public virtual DbSet<Categories> Categories { get; set; }
+        public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contact> Contact { get; set; }
         public virtual DbSet<HomeVideo> HomeVideo { get; set; }
-        public virtual DbSet<Service> Service { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<ProductSliders> ProductSliders { get; set; }
+        public virtual DbSet<Services> Services { get; set; }
         public virtual DbSet<SiteIdentity> SiteIdentity { get; set; }
-        public virtual DbSet<Slider> Slider { get; set; }
-        public virtual DbSet<SystemAdmin> SystemAdmin { get; set; }
-        public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<Comment> Comment { get; set; }
-        public virtual DbSet<Blog> Blog { get; set; }
+        public virtual DbSet<Sliders> Sliders { get; set; }
+        public virtual DbSet<SubCategories> SubCategories { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<SubCategory> SubCategory { get; set; }
-        public virtual DbSet<AdminLog> AdminLog { get; set; }
+        public virtual DbSet<SystemAdmin> SystemAdmin { get; set; }
+        public virtual DbSet<TablesLogs> TablesLogs { get; set; }
+        public virtual DbSet<UserLogs> UserLogs { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

@@ -51,6 +51,9 @@ namespace AdminPanelV1.Controllers
                     Description = homeVideo.Description,
                     VideoUrl = "/Uploads/HomeVideo/" + fileInfo.Name
                 });
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+
+                homeVideo.EmendatorAdminId = userId;
                 VideoUrl.SaveAs(folderPath + fileInfo.Name);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -99,13 +102,24 @@ namespace AdminPanelV1.Controllers
                     System.IO.File.Delete(Server.MapPath(homeVideo.VideoUrl));
                 }
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
 
+                videoUpdate.EmendatorAdminId = userId;
                 videoUpdate.Title = homeVideo.Title;
                 videoUpdate.Description = homeVideo.Description;
                 videoUpdate.VideoUrl = "/Uploads/HomeVideo/" + fileInfo.Name;
                 VideoUrl.SaveAs(folderPath + fileInfo.Name);
+                db.SaveChanges();
 
-            
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = videoUpdate.HomeVideoId;
+                logs.UserId = userId;
+                logs.ItemName = videoUpdate.Title;
+                logs.TableName = "HomeVideo";
+                logs.LogDate = DateTime.Now;
+                logs.Process = videoUpdate.Title + " " + "Ana sayfa video" + " " + userName + " " + "tarafından güncellendi.";
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -134,13 +148,23 @@ namespace AdminPanelV1.Controllers
         {
             HomeVideo homeVideo = db.HomeVideo.Find(id);
 
-            if (System.IO.File.Exists(Server.MapPath(homeVideo.VideoUrl)))
-            {
-                System.IO.File.Delete(Server.MapPath(homeVideo.VideoUrl));
-            }
 
             db.HomeVideo.Remove(homeVideo);
             db.SaveChanges();
+
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
+            TablesLogs logs = new TablesLogs();
+
+            logs.UserId = userId;
+            logs.ItemId = homeVideo.HomeVideoId;
+            logs.ItemName = homeVideo.Title;
+            logs.TableName = "HomeVideo";
+            logs.Process = homeVideo.Title + " " + "Videosu" + " " + userName + " " + "tarafından silindi.";
+            logs.LogDate = DateTime.Now;
+            db.TablesLogs.Add(logs);
+            db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

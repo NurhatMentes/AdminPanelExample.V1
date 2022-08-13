@@ -15,6 +15,7 @@ namespace AdminPanelV1.Models
     public partial class Contact
     {
         public int ContactId { get; set; }
+        public Nullable<int> EmendatorAdminId { get; set; }
         public string Adress { get; set; }
         public string Tel { get; set; }
         public string Email { get; set; }
@@ -23,5 +24,7 @@ namespace AdminPanelV1.Models
         public string Facebook { get; set; }
         public string Twitter { get; set; }
         public string Instagram { get; set; }
+    
+        public virtual Users Users { get; set; }
     }
 }

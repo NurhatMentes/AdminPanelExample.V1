@@ -17,8 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: Category
         public ActionResult Index()
         {
-
-            var category = db.Category;
+            var category = db.Categories.Where(x => x.State == true);
             return View(category.ToList());
         }
 
@@ -29,7 +28,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -48,23 +47,37 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Category category, HttpPostedFileBase imgUrl)
+        public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl)
         {
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
                 {
+                    //var userCookie = Request.Cookies["userCookie"];
+
                     WebImage image = new WebImage(imgUrl.InputStream);
                     FileInfo fileInfo = new FileInfo(imgUrl.FileName);
 
                     string imgName = Guid.NewGuid() + fileInfo.Extension;
                     image.Resize(600, 400);
                     image.Save("~/Uploads/Category/" + imgName);
-
                     category.ImgUrl = "/Uploads/Category/" + imgName;
+                    category.State = true;
+                    category.UserId = userId;
+                    db.Categories.Add(category);
+                    db.SaveChanges();
 
-
-                    db.Category.Add(category);
+                    TablesLogs logs = new TablesLogs();
+                    var cat = db.Categories.OrderByDescending(x => x.CategoryId).FirstOrDefault();
+                    logs.ItemId = cat.CategoryId;
+                    logs.UserId = userId;
+                    logs.ItemName = cat.CategoryName;
+                    logs.TableName = "Categories";
+                    logs.LogDate = DateTime.Now;
+                    logs.Process = cat.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından eklendi.";
+                    db.TablesLogs.Add(logs);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -83,7 +96,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -97,9 +110,11 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Category category, HttpPostedFileBase imgUrl, int id)
+        public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl, int id)
         {
-            var categoryId = db.Category.Where(x => x.CategoryId == id).SingleOrDefault();
+            var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
 
             if (ModelState.IsValid)
             {
@@ -119,11 +134,24 @@ namespace AdminPanelV1.Controllers
 
                     categoryId.ImgUrl = "/Uploads/Category/" + imgName;
 
+                    category.EmendatorAdminId = userId;
+
+
 
                 }
                 categoryId.CategoryName = category.CategoryName;
                 categoryId.Description = category.Description;
 
+
+
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = category.CategoryId;
+                logs.UserId = userId;
+                logs.ItemName = category.CategoryName;
+                logs.TableName = "Categories";
+                logs.LogDate = DateTime.Now;
+                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından güncellendi.";
+                db.TablesLogs.Add(logs);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -139,7 +167,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -152,7 +180,7 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Category.Find(id);
+            Categories category = db.Categories.Find(id);
             try
             {
                 if (category == null)
@@ -160,17 +188,25 @@ namespace AdminPanelV1.Controllers
                     return HttpNotFound();
                 }
 
-                if (System.IO.File.Exists(Server.MapPath(category.ImgUrl)))
-                {
-                    System.IO.File.Delete(Server.MapPath(category.ImgUrl));
-                }
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = HttpContext.User.Identity.Name.Split('|')[3];
 
-
-                db.Category.Remove(category);
+                category.State = false;
                 db.SaveChanges();
+
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = category.CategoryId;
+                logs.UserId = userId;
+                logs.ItemName = category.CategoryName;
+                logs.TableName = "Categories";
+                logs.LogDate = DateTime.Now;
+                logs.Process = category.CategoryName + " " + "Kategorisi" + " " + userName + " " + "tarafından silindi.";
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 ViewBag.Danger = "Kategoriyi silmek için öncelikle kategoriye ait ürünleri silmeniz gerekir";
                 return View(category);

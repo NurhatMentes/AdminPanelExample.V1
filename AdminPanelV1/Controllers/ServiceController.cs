@@ -17,7 +17,7 @@ namespace AdminPanelV1.Controllers
         // GET: Service
         public ActionResult Index()
         {
-            return View(db.Service.ToList());
+            return View(db.Services.Where(x => x.State == true).ToList());
         }
 
         public ActionResult Create()
@@ -27,8 +27,13 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Create(Service service, HttpPostedFileBase ImgUrl)
+        public ActionResult Create(Services service, HttpPostedFileBase ImgUrl)
         {
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
+
+            TablesLogs logs = new TablesLogs();
+
             if (ModelState.IsValid)
             {
                 if (ImgUrl != null)
@@ -41,17 +46,23 @@ namespace AdminPanelV1.Controllers
                     image.Save("~/Uploads/Service/" + imgName);
 
                     service.ImgUrl = "/Uploads/Service/" + imgName;
+                    service.UserId= userId;
 
 
-                    db.Service.Add(service);
+                    db.Services.Add(service);
                     db.SaveChanges();
+
+                    logs.UserId = userId;
+                    logs.ItemId = service.ServiceId;
+                    logs.ItemName = service.Title;
+                    logs.TableName = "Services";
+                    logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından eklendi.";
+                    logs.LogDate = DateTime.Now;
+                    db.TablesLogs.Add(logs);
+                    db.SaveChanges();
+
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    ViewBag.Warning = "Lütfen resim seçiniz";
-                }
-
             }
             return View(service);
         }
@@ -63,7 +74,7 @@ namespace AdminPanelV1.Controllers
                 ViewBag.Warning = "Güncellenecek hizmet bulunamadı.";
             }
 
-            var service = db.Service.Find(id);
+            var service = db.Services.Find(id);
 
             if (service == null)
             {
@@ -75,11 +86,14 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(int? id, Service service, HttpPostedFileBase ImgUrl)
+        public ActionResult Edit(int? id, Services service, HttpPostedFileBase ImgUrl)
         {
+            
+            TablesLogs logs = new TablesLogs();
+
             if (ModelState.IsValid)
             {
-                var serviceId = db.Service.Where(x => x.ServiceId == id).SingleOrDefault();
+                var serviceId = db.Services.Where(x => x.ServiceId == id).SingleOrDefault();
                 if (ImgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(serviceId.ImgUrl)))
@@ -97,10 +111,24 @@ namespace AdminPanelV1.Controllers
                     serviceId.ImgUrl = "/Uploads/Service/" + imgName;
                 }
 
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+
                 serviceId.Description = service.Description;
                 serviceId.Title = service.Title;
                 serviceId.Tag = service.Tag;
+                serviceId.EmendatorAdminId = userId;
+
                 db.SaveChanges();
+                logs.UserId = userId;
+                logs.ItemId = serviceId.ServiceId;
+                logs.ItemName = service.Title;
+                logs.TableName = "Services";
+                logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından güncellendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return View();
@@ -112,7 +140,7 @@ namespace AdminPanelV1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Service service = db.Service.Find(id);
+            Services service = db.Services.Find(id);
             if (service == null)
             {
                 return HttpNotFound();
@@ -124,21 +152,31 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            var service = db.Service.Find(id);
+            var service = db.Services.Find(id);
 
             if (service == null)
             {
                 return HttpNotFound();
             }
 
-            if (System.IO.File.Exists(Server.MapPath(service.ImgUrl)))
-            {
-                System.IO.File.Delete(Server.MapPath(service.ImgUrl));
-            }
 
-
-            db.Service.Remove(service);
+            service.State = false;
             db.SaveChanges();
+
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
+
+            TablesLogs logs = new TablesLogs();
+
+            logs.UserId = userId;
+            logs.ItemId = service.ServiceId;
+            logs.ItemName = service.Title;
+            logs.TableName = "Services";
+            logs.Process = service.Title + " " + "Hizmeti" + " " + userName + " " + "tarafından silindi.";
+            logs.LogDate = DateTime.Now;
+            db.TablesLogs.Add(logs);
+            db.SaveChanges();
+
             return RedirectToAction("Index");
 
         }

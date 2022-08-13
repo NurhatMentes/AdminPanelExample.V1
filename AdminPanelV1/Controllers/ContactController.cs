@@ -43,6 +43,19 @@ namespace AdminPanelV1.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(contact).State = EntityState.Modified;
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+                contact.EmendatorAdminId = userId;
+
+                TablesLogs logs = new TablesLogs();
+                logs.ItemId = contact.ContactId;
+                logs.UserId = userId;
+                logs.ItemName = contact.Email;
+                logs.TableName = "Contact";
+                logs.LogDate = DateTime.Now;
+                logs.Process = contact.Email + " " + "iletişim bilgisi" + " " + userName + " " + "tarafından güncellendi.";
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

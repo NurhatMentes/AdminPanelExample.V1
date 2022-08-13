@@ -1,0 +1,54 @@
+﻿@model AdminPanelV1.Models.Dto.CategoriesDto
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+@{
+    Layout = null;
+}
+
+
+
+
+
+<script>
+    $(function () {
+        $('#CategoryId').change(function () {
+            var id = $('#CategoryId').val();
+            $.ajax({
+                url: '/Products/SubCategory',
+                data: { categoryId: id },
+                type: "POST",
+                dataType: "Json",
+                success: function (data) {
+                    console.log(data);
+                    $('#SubCategoryId').empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $('#SubCategoryId').append("<option value='" + data[i].Value + "'>" + data[i].Text + "</Option>");
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="col-12" style="margin-top:1%">
+    <label for="inputEmail4" class="form-label">Kategoriler</label>
+    @Html.DropDownList("CategoryId", Model.Categories, "Kategori Seçiniz.", new
+    {
+        @class = "form-control"
+    })
+    @ViewBag.Category
+</div>
+<div class="col-12" style="margin-top:1%">
+    <label for="inputEmail4" class="form-label">Alt Kategoriler</label>
+    @Html.DropDownList("SubCategoryId", Model.SubCategories, "Alt Kategori Seçiniz.", new
+    {
+        @class = "form-control"
+    })
+    @ViewBag.SubCategory
+</div>
