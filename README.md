@@ -192,3 +192,13 @@
 </li>
 </ol>
 
+<H3>🔗V1.2.1</H3>
+<li> Yöneticiler bölümü
+    <ul>
+        <li style="list-style-type: none;">
+            <p>➡Yetki isimleri Sayıya dönüştürüldü. (admin -> 1)</p>
+            <p>➡Kullanıcı kendi yetki seviyesini değiştirme bug'ı giderildi</p>
+            <p>➡Yetki seviye 0 ve 1 olan kullanıcılar alt seviyeki kullanıcıların hesaplarını aktif veya pasif hale getirebiliyor</p>
+        </li>
+    </ul>
+</li>
