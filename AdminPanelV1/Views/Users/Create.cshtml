@@ -61,21 +61,21 @@
                 @Html.LabelFor(model => model.Auth, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="Admin" checked>
+                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="1" checked>
                         <label class="form-check-label" for="gridRadios1">
-                            Admin
+                            1
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="Editör">
+                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="2">
                         <label class="form-check-label" for="gridRadios2">
-                            Editör
+                            2
                         </label>
                     </div>
                     <div class="form-check disabled">
-                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="Yazar">
+                        <input class="form-check-input" type="radio" name="Auth" id="userid" value="3">
                         <label class="form-check-label" for="gridRadios3">
-                            Yazar
+                            3
                         </label>
                     </div>
                     @Html.ValidationMessageFor(model => model.Auth, "", new { @class = "text-danger" })

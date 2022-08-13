@@ -1,7 +1,6 @@
 ﻿@{
-    HttpCookie AuthCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-    HttpCookie oCk = HttpContext.Current.Request.Cookies.Get(HttpContext.Current.User.Identity.Name);
-    if (HttpContext.Current.User.Identity.Name == "")
+ 
+    if (HttpContext.Current.User.Identity == null)
     {
         Response.RedirectPermanent("/Users/Login");
     }
@@ -11,6 +10,7 @@
     var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
     var email = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[0];
     var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
+    var userName = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[3];
 
 }
 
@@ -68,6 +68,11 @@
 
     <script src="../../../Scripts/jquery.validate.min.js"></script>
     <script src="../../../Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <!--Toastr -->
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -97,7 +102,7 @@
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
                         <span class="d-none d-md-block dropdown-toggle ps-2">
-                            @userId;
+                            @userName
 
                         </span>
                     </a><!-- End Profile Iamge Icon -->
@@ -112,7 +117,7 @@
                         </li>
                         <li>
                             @{
-                                if (@auth == "Admin")
+                                if (@auth == "0" || @auth == "1")
                                 {
                                     <a class="dropdown-item d-flex align-items-center" href="/Users/Admins/">
                                         <i class="bi bi-file-person-fill"></i>
@@ -162,7 +167,7 @@
                 </a>
             </li><!-- End Dashboard Nav -->
             @{
-                if (@auth == "Admin")
+                if (@auth == "0" || @auth == "1")
                 {
                     <li class="nav-item">
                         <a class="nav-link " href="/SiteIdentity/">
@@ -173,7 +178,7 @@
                 }
 
 
-                if (@auth == "Admin" || @auth == "Editör")
+                if (@auth == "0" || @auth == "1" || @auth == "2")
 
                 {
                     <li class="nav-item">

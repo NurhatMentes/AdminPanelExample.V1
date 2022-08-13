@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Security;
 using AdminPanelV1.Models;
 
@@ -52,24 +53,41 @@ namespace AdminPanelV1.Controllers
             userCookie.Expires = DateTime.Now.AddMinutes(30);
             UserLogs adminLog = new UserLogs();
 
-            if (login != null)
+            try
             {
-                FormsAuthentication.SetAuthCookie(login.Email + "|" + login.UserId + "|" +
-                                                  login.Auth + "|" + login.FullName + "|" + login.Job + "|" +
-                                                  login.Phone + "|" + login.RePassword, true);
+                if (login.State)
+                {
+                    if (login != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(login.Email + "|" + login.UserId + "|" +
+                                                          login.Auth + "|" + login.FullName + "|" + login.Job + "|" +
+                                                          login.Phone + "|" + login.RePassword, true);
 
 
-                adminLog.UserId = login.UserId;
-                adminLog.State = "Giriş Yapıldı";
-                adminLog.LogDate = DateTime.Now; ;
-                db.UserLogs.Add(adminLog);
-                db.SaveChanges();
+                        adminLog.UserId = login.UserId;
+                        adminLog.State = "Giriş Yapıldı";
+                        adminLog.LogDate = DateTime.Now; ;
+                        db.UserLogs.Add(adminLog);
+                        db.SaveChanges();
 
 
-                return RedirectToAction("Index", "Users");
+                        return RedirectToAction("Index", "Users");
 
+                    }
+                    else
+                    {
+                        ViewBag.Danger = "E-posta veya Şifre hatalı";
+                        return View(admin);
+                    }
+                }
             }
-            ViewBag.Danger = "E-posta veya Şifre hatalı";
+            catch (Exception)
+            {
+
+                return View(admin);
+            }
+            ViewBag.Danger = "Hesabınız aktif değil. Giriş yapmak için yönetici ile irtibata geçiniz.";
+
             return View(admin);
         }
 
@@ -174,12 +192,22 @@ namespace AdminPanelV1.Controllers
         public ActionResult Edit(int id)
         {
             var admin = db.Users.Where(x => x.UserId == id).SingleOrDefault();
+            ViewBag.AuthCheck=db.Users.FirstOrDefault(x => x.UserId == id).Auth;
+            ViewBag.StateCheck = db.Users.FirstOrDefault(x => x.UserId == id).State;
+
             return View(admin);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, Users admin, string password)
         {
+            ViewBag.AuthCheck = db.Users.FirstOrDefault(x => x.UserId == id).Auth;
+            ViewBag.StateCheck = db.Users.FirstOrDefault(x => x.UserId == id).State;
+
+            var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
+            var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
+
+
             if (ModelState.IsValid)
             {
                 var adm = db.Users.Where(x => x.UserId == id).SingleOrDefault();
@@ -192,7 +220,46 @@ namespace AdminPanelV1.Controllers
                 adm.Job = admin.Job;
                 adm.FullName = admin.FullName;
                 adm.Email = admin.Email;
-                adm.Auth = admin.Auth;
+
+                if (Convert.ToInt16(userId) == adm.UserId)
+                {
+                    if (adm.Auth!=admin.Auth)
+                    {
+                        ViewBag.State = "1";
+                        ViewBag.Warning2 = "Kendi Yetki seviyeni değiştiremezsin!";
+                        return View();
+                    }
+                    else
+                    {
+                        adm.Auth = admin.Auth;
+                    }
+                }
+                else
+                {
+                    adm.Auth = admin.Auth;
+                }
+
+                if (auth == "0" || auth == "1" )
+                {
+                    if (auth == "1")
+                    {
+                        if (adm.Auth != "0" && adm.Auth != "1")
+                        {
+                            adm.State = admin.State;
+                        }
+                        else
+                        {
+                            ViewBag.State = "0";
+                            ViewBag.Warning = "Geçersiz yetki!";
+                            return View();
+                        }
+                    }
+                    if (auth == "0")
+                    {
+                        adm.State = admin.State;
+                    }
+                }
+               
 
                 db.SaveChanges();
                 return RedirectToAction("Admins");
