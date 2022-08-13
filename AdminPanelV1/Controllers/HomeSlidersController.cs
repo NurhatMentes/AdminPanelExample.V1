@@ -39,7 +39,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Create(Sliders slider, HttpPostedFileBase imgUrl)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
             TablesLogs logs = new TablesLogs();
 
             if (imgUrl != null)
@@ -94,7 +94,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Edit(Sliders slider, HttpPostedFileBase ImgUrl, int id)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
             TablesLogs logs = new TablesLogs();
 
             var sliderId = db.Sliders.Where(x => x.SliderId == id).SingleOrDefault();
@@ -164,7 +164,7 @@ namespace AdminPanelV1.Controllers
             db.SaveChanges();
 
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
             TablesLogs logs = new TablesLogs();
 
             logs.UserId = userId;

@@ -28,7 +28,7 @@ namespace AdminPanelV1.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImgUrl { get; set; }
-        public Nullable<bool> State { get; set; }
+        public bool State { get; set; }
     
         public virtual Categories Categories { get; set; }
         public virtual SubCategories SubCategories { get; set; }

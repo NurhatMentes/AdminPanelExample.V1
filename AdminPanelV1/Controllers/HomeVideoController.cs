@@ -103,7 +103,7 @@ namespace AdminPanelV1.Controllers
                 }
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
 
                 videoUpdate.EmendatorAdminId = userId;
                 videoUpdate.Title = homeVideo.Title;
@@ -153,7 +153,7 @@ namespace AdminPanelV1.Controllers
             db.SaveChanges();
 
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
             TablesLogs logs = new TablesLogs();
 
             logs.UserId = userId;

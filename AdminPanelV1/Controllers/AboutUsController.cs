@@ -32,7 +32,7 @@ namespace AdminPanelV1.Controllers
             
             TablesLogs logs = new TablesLogs();
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
             if (ModelState.IsValid)
             {
                 var about = db.AboutUs.Where(x => x.AboutUsId == id).FirstOrDefault();

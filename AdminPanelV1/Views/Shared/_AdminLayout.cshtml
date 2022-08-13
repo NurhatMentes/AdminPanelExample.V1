@@ -1,7 +1,16 @@
 ﻿@{
-    var userId = Convert.ToInt32(User.Identity.Name.Split('|')[1]);
-    string email =User.Identity.Name.Split('|')[0];
-    string auth = User.Identity.Name.Split('|')[2];
+    HttpCookie AuthCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    HttpCookie oCk = HttpContext.Current.Request.Cookies.Get(HttpContext.Current.User.Identity.Name);
+    if (HttpContext.Current.User.Identity.Name == "")
+    {
+        Response.RedirectPermanent("/Users/Login");
+    }
+}
+
+@{
+    var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
+    var email = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[0];
+    var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
 
 }
 

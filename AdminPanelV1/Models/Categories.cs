@@ -17,6 +17,7 @@ namespace AdminPanelV1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Categories()
         {
+            this.State = true;
             this.Blogs = new HashSet<Blogs>();
             this.Products = new HashSet<Products>();
             this.SubCategories = new HashSet<SubCategories>();
@@ -28,7 +29,7 @@ namespace AdminPanelV1.Models
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public string ImgUrl { get; set; }
-        public Nullable<bool> State { get; set; }
+        public bool State { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Blogs> Blogs { get; set; }

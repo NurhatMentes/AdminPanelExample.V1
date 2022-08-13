@@ -49,6 +49,8 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl)
         {
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
@@ -62,10 +64,7 @@ namespace AdminPanelV1.Controllers
                     image.Resize(600, 400);
                     image.Save("~/Uploads/Category/" + imgName);
                     category.ImgUrl = "/Uploads/Category/" + imgName;
-
-                    var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                    var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
-
+                    category.State = true;
                     category.UserId = userId;
                     db.Categories.Add(category);
                     db.SaveChanges();
@@ -115,7 +114,7 @@ namespace AdminPanelV1.Controllers
         {
             var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
 
             if (ModelState.IsValid)
             {
@@ -190,7 +189,7 @@ namespace AdminPanelV1.Controllers
                 }
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                var userName = HttpContext.User.Identity.Name.Split('|')[3];
 
                 category.State = false;
                 db.SaveChanges();

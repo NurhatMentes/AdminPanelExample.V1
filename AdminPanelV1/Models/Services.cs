@@ -21,7 +21,7 @@ namespace AdminPanelV1.Models
         public string Description { get; set; }
         public string Tag { get; set; }
         public string ImgUrl { get; set; }
-        public Nullable<bool> State { get; set; }
+        public bool State { get; set; }
     
         public virtual Users Users { get; set; }
         public virtual Users Users1 { get; set; }

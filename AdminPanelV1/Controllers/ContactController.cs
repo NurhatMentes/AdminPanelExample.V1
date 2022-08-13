@@ -44,7 +44,7 @@ namespace AdminPanelV1.Controllers
             {
                 db.Entry(contact).State = EntityState.Modified;
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
                 contact.EmendatorAdminId = userId;
 
                 TablesLogs logs = new TablesLogs();

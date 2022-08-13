@@ -86,7 +86,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Create( Products products, HttpPostedFileBase imgUrl, HttpPostedFileBase uploadFile)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+            var userName =HttpContext.User.Identity.Name.Split('|')[3];
             TablesLogs logs = new TablesLogs();
 
            
@@ -221,7 +221,7 @@ namespace AdminPanelV1.Controllers
                 }
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
 
                 productId.OldPrice = productId.Price;
                 productId.Price = product.Price;
@@ -283,7 +283,7 @@ namespace AdminPanelV1.Controllers
 
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[3]);
+                var userName =HttpContext.User.Identity.Name.Split('|')[3];
                 TablesLogs logs = new TablesLogs();
 
                 logs.UserId = userId;

@@ -26,7 +26,7 @@
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Categories">
           <Key>
@@ -38,7 +38,7 @@
           <Property Name="CategoryName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="50" />
           <Property Name="ImgUrl" Type="ntext" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -50,6 +50,7 @@
           <Property Name="FirstLastName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CommentContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
           <Property Name="Confirmation" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
@@ -106,7 +107,7 @@
           <Property Name="SliderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="ImgUrl" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
@@ -119,7 +120,7 @@
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Tag" Type="nvarchar(max)" />
           <Property Name="ImgUrl" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SiteIdentity">
           <Key>
@@ -143,7 +144,7 @@
           <Property Name="Title" Type="nvarchar" MaxLength="70" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="ImgUrl" Type="nvarchar(max)" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SubCategories">
           <Key>
@@ -193,7 +194,7 @@
           </Key>
           <Property Name="UserLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="State" Type="nvarchar" MaxLength="20" />
+          <Property Name="State" Type="nvarchar" MaxLength="50" />
           <Property Name="LogDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Users">
@@ -208,7 +209,7 @@
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="RePassword" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Auth" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="State" Type="bit" />
+          <Property Name="State" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_AboutUs_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -655,7 +656,7 @@
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Categories" Relationship="Self.FK_Blog_Category" FromRole="Blogs" ToRole="Categories" />
           <NavigationProperty Name="SubCategories" Relationship="Self.FK_Blog_SubCategory" FromRole="Blogs" ToRole="SubCategories" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Blogs_Users" FromRole="Blogs" ToRole="Users" />
@@ -671,7 +672,7 @@
           <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" DefaultValue="true" Nullable="false" />
           <NavigationProperty Name="Blogs" Relationship="Self.FK_Blog_Category" FromRole="Categories" ToRole="Blogs" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Categories_Users" FromRole="Categories" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_Categories_Users1" FromRole="Categories" ToRole="Users" />
@@ -691,6 +692,7 @@
           <Property Name="Confirmation" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Blogs" Relationship="Self.FK_Comment_Blog" FromRole="Comments" ToRole="Blogs" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Comments_Products" FromRole="Comments" ToRole="Products" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -754,7 +756,7 @@
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="Self.FK_ProductSliders_Products" FromRole="ProductSliders" ToRole="Products" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
@@ -767,7 +769,7 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Tag" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImgUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="Boolean" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Services_Users" FromRole="Services" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_Services_Users1" FromRole="Services" ToRole="Users" />
         </EntityType>
@@ -1354,6 +1356,7 @@
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="AdminV1Model.Comments">
               <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="CommentId" ColumnName="CommentId" />
                 <ScalarProperty Name="BlogId" ColumnName="BlogId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
