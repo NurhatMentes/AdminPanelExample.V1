@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AdminPanelV1.Models.Comment>
+
+@{
+    Layout = null;
+}
+
+
+@{ if (Session["Auth"].ToString() == "Admin" || Session["Auth"].ToString() == "Editör" || Session["Auth"].ToString() == null)
+    {
+        <li class="nav-item dropdown">
+
+            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-bell"></i>
+                <span class="badge bg-primary badge-number">@ViewBag.CommentConf</span>
+            </a><!-- End Notification Icon -->
+
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                <li class="dropdown-header">
+                    Bekleyen @ViewBag.CommentConf Yorum Bulunmaktadır.
+                    <a href="/Comments/Index/"><span class="badge rounded-pill bg-primary p-2 ms-2">Hepsini Gör</span></a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+
+
+                @foreach (var item in Model)
+                {
+                    <li class="notification-item">
+                        <i class="bi bi-exclamation-circle text-warning"></i>
+                        <div>
+                            <h4>@item.FirstLastName</h4>
+                            <p>@item.CommentContent</p>
+                            <p><a href="/Comments/Edit/@item.CommentId">Yorumu Onayla</a></p>
+                        </div>
+                    </li>
+                }
+
+            </ul><!-- End Notification Dropdown Items -->
+
+        </li>
+    }
+}

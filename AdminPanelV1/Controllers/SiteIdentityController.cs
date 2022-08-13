@@ -33,9 +33,6 @@ namespace AdminPanelV1.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(int id, SiteIdentity siteIdentity, HttpPostedFileBase LogoUrl)
         {
-            
-            TablesLogs logs = new TablesLogs();
-
             if (ModelState.IsValid)
             {
                 var identity = db.SiteIdentity.Where(x => x.IdentityId == id).SingleOrDefault();
@@ -67,19 +64,6 @@ namespace AdminPanelV1.Controllers
                 identity.Keywords = siteIdentity.Keywords;
 
                 db.SaveChanges();
-
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
-
-                logs.UserId = userId;
-                logs.ItemId = identity.IdentityId;
-                logs.ItemName = identity.Title;
-                logs.TableName = "SiteIdentity";
-                logs.Process = identity.Title + " " + userName + " " + "tarafından güncellendi.";
-                logs.LogDate = DateTime.Now;
-                db.TablesLogs.Add(logs);
-                db.SaveChanges();
-
                 return RedirectToAction("Index");
             }
 

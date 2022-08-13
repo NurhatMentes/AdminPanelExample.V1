@@ -123,12 +123,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AboutUsController.cs" />
-    <Compile Include="Controllers\HomeSlidersController.cs" />
-    <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\ProductSlidersController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\UserProfilController.cs" />
-    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminProfilController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -143,19 +139,24 @@
     <Compile Include="Models\AboutUs.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Blogs.cs">
+    <Compile Include="Models\Admin.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Categories.cs">
+    <Compile Include="Models\AdminLog.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Comments.cs">
+    <Compile Include="Models\Blog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Category.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comment.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Contact.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Dto\CategoriesDto.cs" />
     <Compile Include="Models\HomeVideo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -174,37 +175,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Products.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductSliders.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Services.cs">
+    <Compile Include="Models\Service.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SiteIdentity.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Sliders.cs">
+    <Compile Include="Models\Slider.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SubCategories.cs">
+    <Compile Include="Models\SubCategory.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagrams.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SystemAdmin.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TablesLogs.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\UserLogs.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Users.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1063,8 +1049,6 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
-    <Content Include="Content\toastr.css" />
-    <Content Include="Content\toastr.min.css" />
     <Content Include="Db\adminPanelDataBaseExample.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -1185,8 +1169,6 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Content\toastr.scss" />
-    <Content Include="Content\toastr.less" />
     <None Include="Dockerfile" />
     <None Include=".dockerignore">
       <DependentUpon>Dockerfile</DependentUpon>
@@ -1309,8 +1291,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\toastr.js" />
-    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1326,21 +1306,21 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Users\Login.cshtml" />
-    <Content Include="Views\Users\ForgotMyPassword.cshtml" />
-    <Content Include="Views\Users\CommentPartial.cshtml" />
-    <Content Include="Views\Users\Admins.cshtml" />
-    <Content Include="Views\UserProfil\Index.cshtml" />
-    <Content Include="Views\UserProfil\Details.cshtml" />
-    <Content Include="Views\UserProfil\Create.cshtml" />
-    <Content Include="Views\UserProfil\Edit.cshtml" />
-    <Content Include="Views\UserProfil\PasswordPartial.cshtml" />
-    <Content Include="Views\UserProfil\Delete.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Admin\Delete.cshtml" />
+    <Content Include="Views\Admin\Details.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Admin\ForgotMyPassword.cshtml" />
+    <Content Include="Views\Admin\CommentPartial.cshtml" />
+    <Content Include="Views\Admin\Admins.cshtml" />
+    <Content Include="Views\AdminProfil\Index.cshtml" />
+    <Content Include="Views\AdminProfil\Details.cshtml" />
+    <Content Include="Views\AdminProfil\Create.cshtml" />
+    <Content Include="Views\AdminProfil\Edit.cshtml" />
+    <Content Include="Views\AdminProfil\PasswordPartial.cshtml" />
+    <Content Include="Views\AdminProfil\Delete.cshtml" />
     <Content Include="Views\AboutUs\Index.cshtml" />
     <Content Include="Views\AboutUs\Edit.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
@@ -1366,36 +1346,11 @@
     <Content Include="Views\SubCategory\Create.cshtml" />
     <Content Include="Views\SubCategory\Edit.cshtml" />
     <Content Include="Views\SubCategory\Delete.cshtml" />
-    <Content Include="Views\Blog\Index.cshtml" />
-    <Content Include="Views\Blog\Edit.cshtml" />
-    <Content Include="Views\Blog\CategoriesPartial.cshtml" />
-    <Content Include="Views\Blog\Create.cshtml" />
-    <Content Include="Views\Products\Create.cshtml" />
-    <Content Include="Views\Products\Delete.cshtml" />
-    <Content Include="Views\Products\Details.cshtml" />
-    <Content Include="Views\Products\Edit.cshtml" />
-    <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\Products\CategoriesPartial.cshtml" />
-    <Content Include="Views\ProductSliders\Index.cshtml" />
-    <Content Include="Views\ProductSliders\Create.cshtml" />
-    <Content Include="Views\ProductSliders\Edit.cshtml" />
-    <Content Include="Views\Blog\Delete.cshtml" />
-    <Content Include="Views\ProductSliders\Delete.cshtml" />
-    <Content Include="Views\HomeSliders\Create.cshtml" />
-    <Content Include="Views\HomeSliders\Delete.cshtml" />
-    <Content Include="Views\HomeSliders\Details.cshtml" />
-    <Content Include="Views\HomeSliders\Edit.cshtml" />
-    <Content Include="Views\HomeSliders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Uploads\Blog\" />
-    <Folder Include="Uploads\Catalog\" />
     <Folder Include="Uploads\Category\" />
-    <Folder Include="Uploads\HomeSlider\" />
     <Folder Include="Uploads\HomeVideo\" />
-    <Folder Include="Uploads\ProductSlider\" />
-    <Folder Include="Uploads\Product\" />
     <Folder Include="Uploads\Service\" />
     <Folder Include="Uploads\SiteIdentity\" />
     <Folder Include="Uploads\SubCategory\" />

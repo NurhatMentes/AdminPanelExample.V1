@@ -12,11 +12,11 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HomeVideo
+    public partial class Slider
     {
-        public int HomeVideoId { get; set; }
+        public int SliderId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string VideoUrl { get; set; }
+        public string ImgUrl { get; set; }
     }
 }

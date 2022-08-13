@@ -12,11 +12,15 @@ namespace AdminPanelV1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HomeVideo
+    public partial class Comment
     {
-        public int HomeVideoId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string VideoUrl { get; set; }
+        public int CommentId { get; set; }
+        public int BlogId { get; set; }
+        public string FirstLastName { get; set; }
+        public string Email { get; set; }
+        public string CommentContent { get; set; }
+        public bool Confirmation { get; set; }
+    
+        public virtual Blog Blog { get; set; }
     }
 }
