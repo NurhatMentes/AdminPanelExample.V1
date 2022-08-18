@@ -42,8 +42,6 @@ namespace AdminPanelV1.Models
         public string Job { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public string RePassword { get; set; }
         public string Auth { get; set; }
         public bool State { get; set; }
     
@@ -81,5 +79,6 @@ namespace AdminPanelV1.Models
         public virtual ICollection<UserLogs> UserLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserLogs> UserLogs1 { get; set; }
+        public virtual UserPasswords UserPasswords { get; set; }
     }
 }

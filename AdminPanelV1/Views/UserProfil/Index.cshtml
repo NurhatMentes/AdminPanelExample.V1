@@ -4,7 +4,12 @@
     ViewBag.Title = "Profilim";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
-    var userCookie = Request.Cookies["userCookie"];
+    var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
+    var email = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[0];
+    var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
+    var userName = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[3];
+    var userJob = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[4];
+    var userPhone = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[5];
 }
 
 
@@ -18,8 +23,8 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
                     <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
-                    <h2>@userCookie["FullName"]</h2>
-                    <h3>@userCookie["Auth"]</h3>
+                    <h2>@userName</h2>
+                    <h3>@auth</h3>
                 </div>
             </div>
 
@@ -33,14 +38,16 @@
                     <ul class="nav nav-tabs nav-tabs-bordered">
 
                         <li class="nav-item">
-                            <a href="/AdminProfil/"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Genel Bakış</button></a>
+                            <a href="/UserProfil/"><button class="nav-link " data-bs-toggle="tab" data-bs-target="#profile-overview">Genel Bakış</button></a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="/AdminProfil/Edit/@userCookie["userid"]"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Profili Düzenle</button></a>
+                            <a href="/UserProfil/Edit/@userId"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Profili Düzenle</button></a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit"><a href="/AdminProfil/PasswordPartial/@userCookie["userid"]"> Şİfreyi Değiştir</a></button>
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">
+                                <a href="/UserPasswords/Edit/@userId"> Şifreyi Değiştir</a>
+                            </button>
                         </li>
 
                     </ul>
@@ -53,27 +60,27 @@
 
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label ">İsim</div>
-                                <div class="col-lg-9 col-md-8">@userCookie["FullName"]</div>
+                                <div class="col-lg-9 col-md-8">@userName</div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">İş</div>
-                                <div class="col-lg-9 col-md-8">@userCookie["Job"]</div>
+                                <div class="col-lg-9 col-md-8">@userJob</div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">Yetki Seviyesi</div>
-                                <div class="col-lg-9 col-md-8">@userCookie["Auth"]</div>
+                                <div class="col-lg-9 col-md-8">@auth</div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">E Posta</div>
-                                <div class="col-lg-9 col-md-8">@userCookie["Email"]</div>
+                                <div class="col-lg-9 col-md-8">@email</div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">Telefon</div>
-                                <div class="col-lg-9 col-md-8">@userCookie["Phone"]</div>
+                                <div class="col-lg-9 col-md-8">@userPhone</div>
                             </div>
                         </div>
                     </div><!-- End Bordered Tabs -->

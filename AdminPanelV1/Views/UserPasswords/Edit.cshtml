@@ -1,0 +1,105 @@
+﻿@model AdminPanelV1.Models.UserPasswords
+
+@{ ViewBag.Title = "Profil Düzenle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
+    var email = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[0];
+    var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
+    var userName = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[3];
+    var userJob = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[4];
+    var userPhone = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[5];
+}
+
+
+
+<div class="form-horizontal">
+
+
+
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-4">
+
+                <div class="card">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                        <img src="~/Content/AdminLayout/assets/img/User-Profile.png" alt="Profile" class="rounded-circle">
+                        <h2>@userName</h2>
+                        <h3>@auth</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-8">
+
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+
+                            <li class="nav-item">
+                                <a href="/UserProfil/"><button class="nav-link " data-bs-toggle="tab" data-bs-target="#profile-overview">Genel Bakış</button></a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="/UserProfil/Edit/@userId"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Profili Düzenle</button></a>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">
+                                    <a href="/UserPasswords/Edit/@userId"> Şifreyi Değiştir</a>
+                                </button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content pt-2">
+
+
+                            @using (Html.BeginForm("Edit", "UserPasswords", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.UserId)
+
+                                <div class="row mb-3">
+                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Güncel Şifreniz</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="CurrentPassword" type="password" class="form-control" id="CurrentPassword">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Şifre</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="Password" type="password" class="form-control" id="Password">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Şifreyi Tekrarla</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="newPassword" type="password" class="form-control" id="newPassword">
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="text-center">
+                                    <h6 style="color:red"><b>@ViewBag.Danger</b></h6>
+                                    <h6 style="color:red"><b>@ViewBag.Warning</b></h6>
+                                    <h6 style="color:green"><b>@ViewBag.Success</b></h6>
+                                    <h6 style="color:red"> @Html.ValidationMessageFor(model => model.Password)</h6>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Şifreyi Değiştir</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

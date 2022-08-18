@@ -47,6 +47,8 @@
         <AssociationConnector Association="AdminV1Model.FK_TablesLogs_User" ManuallyRouted="false" />
         <AssociationConnector Association="AdminV1Model.FK_UserLog_User" ManuallyRouted="false" />
         <AssociationConnector Association="AdminV1Model.FK_UserLogs_Users" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="AdminV1Model.UserPasswords" Width="1.5" PointX="0.75" PointY="16.75" />
+        <AssociationConnector Association="AdminV1Model.FK_Users_UserPasswords" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

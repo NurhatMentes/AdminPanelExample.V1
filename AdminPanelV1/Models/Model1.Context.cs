@@ -42,5 +42,6 @@ namespace AdminPanelV1.Models
         public virtual DbSet<TablesLogs> TablesLogs { get; set; }
         public virtual DbSet<UserLogs> UserLogs { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UserPasswords> UserPasswords { get; set; }
     }
 }

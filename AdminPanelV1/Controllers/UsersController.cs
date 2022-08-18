@@ -47,7 +47,7 @@ namespace AdminPanelV1.Controllers
         public ActionResult Login(Users admin, string password)
         {
             var md5pass = Crypto.Hash(password, "MD5");
-            var login = db.Users.Where(x => x.Email == admin.Email && x.Password == md5pass).FirstOrDefault();
+            var login = db.Users.Where(x => x.Email == admin.Email && x.UserPasswords.CurrentPassword == md5pass).FirstOrDefault();
 
             HttpCookie userCookie = new HttpCookie("userCookie");
             userCookie.Expires = DateTime.Now.AddMinutes(30);
@@ -55,31 +55,30 @@ namespace AdminPanelV1.Controllers
 
             try
             {
-                if (login.State)
+
+                if (login != null)
                 {
-                    if (login != null)
-                    {
-                        FormsAuthentication.SetAuthCookie(login.Email + "|" + login.UserId + "|" +
-                                                          login.Auth + "|" + login.FullName + "|" + login.Job + "|" +
-                                                          login.Phone + "|" + login.RePassword, true);
+                    FormsAuthentication.SetAuthCookie(login.Email + "|" + login.UserId + "|" +
+                                                      login.Auth + "|" + login.FullName + "|" + login.Job + "|" +
+                                                      login.Phone, true);
 
 
-                        adminLog.UserId = login.UserId;
-                        adminLog.State = "Giriş Yapıldı";
-                        adminLog.LogDate = DateTime.Now; ;
-                        db.UserLogs.Add(adminLog);
-                        db.SaveChanges();
+                    adminLog.UserId = login.UserId;
+                    adminLog.State = "Giriş Yapıldı";
+                    adminLog.LogDate = DateTime.Now; ;
+                    db.UserLogs.Add(adminLog);
+                    db.SaveChanges();
 
 
-                        return RedirectToAction("Index", "Users");
+                    return RedirectToAction("Index", "Users");
 
-                    }
-                    else
-                    {
-                        ViewBag.Danger = "E-posta veya Şifre hatalı";
-                        return View(admin);
-                    }
                 }
+                else
+                {
+                    ViewBag.Danger = "E-posta veya Şifre hatalı";
+                    return View(admin);
+                }
+
             }
             catch (Exception)
             {
@@ -129,8 +128,8 @@ namespace AdminPanelV1.Controllers
                 string newPassword = rndPass.ToString() + rndPass2.ToString();
 
                 Users admin = new Users();
-                user.Password = Crypto.Hash(newPassword, "MD5");
-                user.RePassword = Crypto.Hash(newPassword, "MD5");
+                user.UserPasswords.CurrentPassword = Crypto.Hash(newPassword, "MD5");
+                user.UserPasswords.Password = Crypto.Hash(newPassword, "MD5");
                 db.SaveChanges();
 
                 try
@@ -165,7 +164,7 @@ namespace AdminPanelV1.Controllers
 
         public ActionResult Admins()
         {
-            return View(db.Users.ToList());
+            return View(db.Users.Where(x => x.Auth != "0").ToList());
         }
 
         public ActionResult Create()
@@ -174,32 +173,52 @@ namespace AdminPanelV1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Users admin, string password)
+        public ActionResult Create(Users user, string password)
         {
             if (ModelState.IsValid)
             {
-                admin.Password = Crypto.Hash(password, "MD5");
-                admin.RePassword = Crypto.Hash(password, "MD5");
-                db.Users.Add(admin);
-                db.SaveChanges();
+                if (password.Length > 7)
+                {
+                    user.UserPasswords.Password = Crypto.Hash(password, "MD5");
+                    user.UserPasswords.CurrentPassword = Crypto.Hash(password, "MD5");
+                    db.Users.Add(user);
+                    db.SaveChanges();
 
-                return RedirectToAction("Admins");
+                    TablesLogs logs = new TablesLogs();
+                    var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                    var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
+                    logs.UserId = userId;
+                    logs.ItemId = user.UserId;
+                    logs.ItemName = user.FullName;
+                    logs.TableName = "Users";
+                    logs.Process = user.FullName + " " + "kişisi" + " " + userName + " " + "tarafından eklendi.";
+                    logs.LogDate = DateTime.Now;
+                    db.TablesLogs.Add(logs);
+                    db.SaveChanges();
+                    return RedirectToAction("Admins");
+                }
+                else
+                {
+                    ViewBag.Warning = "Şifreniz En Az 8 Karakter Olmalıdır";
+                }
+
             }
 
-            return View(admin);
+            return View(user);
         }
 
         public ActionResult Edit(int id)
         {
             var admin = db.Users.Where(x => x.UserId == id).SingleOrDefault();
-            ViewBag.AuthCheck=db.Users.FirstOrDefault(x => x.UserId == id).Auth;
+            ViewBag.AuthCheck = db.Users.FirstOrDefault(x => x.UserId == id).Auth;
             ViewBag.StateCheck = db.Users.FirstOrDefault(x => x.UserId == id).State;
 
             return View(admin);
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, Users admin, string password)
+        public ActionResult Edit(int id, Users user, string password)
         {
             ViewBag.AuthCheck = db.Users.FirstOrDefault(x => x.UserId == id).Auth;
             ViewBag.StateCheck = db.Users.FirstOrDefault(x => x.UserId == id).State;
@@ -208,64 +227,102 @@ namespace AdminPanelV1.Controllers
             var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
 
 
-            if (ModelState.IsValid)
-            {
-                var adm = db.Users.Where(x => x.UserId == id).SingleOrDefault();
-                if (password != adm.Password)
-                {
-                    adm.Password = Crypto.Hash(password, "MD5");
-                    adm.RePassword = Crypto.Hash(password, "MD5");
-                }
-                adm.Phone = admin.Phone;
-                adm.Job = admin.Job;
-                adm.FullName = admin.FullName;
-                adm.Email = admin.Email;
 
-                if (Convert.ToInt16(userId) == adm.UserId)
+            var adm = db.Users.Where(x => x.UserId == id).SingleOrDefault();
+            if (password != null)
+            {
+                if (password != adm.UserPasswords.CurrentPassword)
                 {
-                    if (adm.Auth!=admin.Auth)
+                    adm.UserPasswords.CurrentPassword = Crypto.Hash(password, "MD5");
+                    adm.UserPasswords.Password = Crypto.Hash(password, "MD5");
+                    db.SaveChanges();
+                    ViewBag.State = "1";
+                    ViewBag.AuthWarning = "Şifre Değiştirildi";
+                }
+            }
+
+            if (user.UserId == int.Parse(userId) || user.UserId != 0 || user.UserId != 1)
+            {
+                if (adm.State == user.State && adm.Auth == user.Auth)
+                {
+                    if (adm.Phone != user.Phone || adm.Job != user.Job || adm.FullName != user.FullName || adm.Email != user.Email)
                     {
-                        ViewBag.State = "1";
-                        ViewBag.Warning2 = "Kendi Yetki seviyeni değiştiremezsin!";
-                        return View();
-                    }
-                    else
-                    {
-                        adm.Auth = admin.Auth;
+                        adm.Phone = user.Phone;
+                        adm.Job = user.Job;
+                        adm.FullName = user.FullName;
+                        adm.Email = user.Email;
+                        ViewBag.State = "0";
+                        ViewBag.Success = "Kişisel bilgiler güncellendi.";
+                        db.SaveChanges();
+                        if (auth == "0")
+                        {
+                            return RedirectToAction("Admins");
+                        }
                     }
                 }
                 else
                 {
-                    adm.Auth = admin.Auth;
-                }
-
-                if (auth == "0" || auth == "1" )
-                {
-                    if (auth == "1")
+                    if (Convert.ToInt16(auth) == 1 || Convert.ToInt16(auth) == 0)
                     {
-                        if (adm.Auth != "0" && adm.Auth != "1")
+                        if (adm.UserId == Convert.ToInt16(userId))
                         {
-                            adm.State = admin.State;
+                            if (adm.Auth != user.Auth)
+                            {
+                                ViewBag.State = "1";
+                                ViewBag.AuthWarning = "Kendi Yetki seviyeni değiştiremezsin!";
+                            }
                         }
                         else
                         {
-                            ViewBag.State = "0";
-                            ViewBag.Warning = "Geçersiz yetki!";
-                            return View();
+                            adm.Auth = user.Auth;
+                            ViewBag.State = "2";
+                            ViewBag.AuthSuccess = "Yetki seviyesi değiştirildi";
+                            db.SaveChanges();
                         }
                     }
-                    if (auth == "0")
+                    else
                     {
-                        adm.State = admin.State;
+                        ViewBag.Warning2 = "Yetki seviyesini değiştiremezsin!";
+                    }
+
+                    if (auth == "0" || auth == "1")
+                    {
+                        if (auth == "0")
+                        {
+                            adm.State = user.State;
+                        }
+
+                        if (auth == "1")
+                        {
+                            if (adm.Auth != "0" && adm.Auth != "1")
+                            {
+                                adm.State = user.State;
+                                ViewBag.State = "3";
+                                ViewBag.StateSuccess = "Hesap durumu değiştirildi.";
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                if (adm.State != user.State)
+                                {
+                                    ViewBag.State = "4";
+                                    ViewBag.StateWarning = "Kişisel bilgiler güncellendi. Fakat durumu değiştirme yetkisine sahip değilsin.";
+                                    db.SaveChanges();
+                                }
+
+                            }
+                        }
+
+                        db.SaveChanges();
+                        ViewBag.AuthCheck = db.Users.FirstOrDefault(x => x.UserId == id).Auth;
+                        ViewBag.StateCheck = db.Users.FirstOrDefault(x => x.UserId == id).State;
+                        return View(user);
                     }
                 }
-               
-
-                db.SaveChanges();
-                return RedirectToAction("Admins");
             }
 
-            return View(admin);
+
+            return View(user);
         }
 
         public ActionResult Delete(int? id)
@@ -279,6 +336,28 @@ namespace AdminPanelV1.Controllers
             {
                 return HttpNotFound();
             }
+
+            try
+            {
+                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+                var userName = HttpContext.User.Identity.Name.Split('|')[3];
+                TablesLogs logs = new TablesLogs();
+
+                logs.UserId = userId;
+                logs.ItemId = users.UserId;
+                logs.ItemName = users.FullName;
+                logs.TableName = "Users";
+                logs.Process = users.FullName + " " + "kullanıcısı" + " " + userName + " " + "tarafından silindi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+                return RedirectToAction("Users");
+            }
+            catch (Exception)
+            {
+                return View(users);
+            }
+
             return View(users);
         }
 
