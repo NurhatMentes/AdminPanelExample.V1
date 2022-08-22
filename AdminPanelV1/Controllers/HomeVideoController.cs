@@ -14,6 +14,7 @@ namespace AdminPanelV1.Controllers
     {
         AdminV1 db = new AdminV1();
 
+
         // GET: HomeVideo
         public ActionResult Index()
         {
@@ -55,6 +56,8 @@ namespace AdminPanelV1.Controllers
 
                 homeVideo.EmendatorAdminId = userId;
                 VideoUrl.SaveAs(folderPath + fileInfo.Name);
+
+             
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

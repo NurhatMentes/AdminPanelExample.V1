@@ -14,6 +14,23 @@ namespace AdminPanelV1.Controllers
     {
         AdminV1 db = new AdminV1();
 
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
+
         // GET: Service
         public ActionResult Index()
         {
@@ -27,31 +44,27 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Create(Services service, HttpPostedFileBase ImgUrl)
+        public ActionResult Create(Services service, HttpPostedFileBase imgUrl)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
             var userName =HttpContext.User.Identity.Name.Split('|')[3];
 
-            TablesLogs logs = new TablesLogs();
+        
 
             if (ModelState.IsValid)
             {
-                if (ImgUrl != null)
+                if (imgUrl != null)
                 {
-                    WebImage image = new WebImage(ImgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(ImgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(750, 600);
-                    image.Save("~/Uploads/Service/" + imgName);
-
+                    string imgName = WebpImage(imgUrl, "Service");
                     service.ImgUrl = "/Uploads/Service/" + imgName;
                     service.UserId= userId;
-
+                    service.State = true;
 
                     db.Services.Add(service);
                     db.SaveChanges();
 
+
+                    TablesLogs logs = new TablesLogs();
                     logs.UserId = userId;
                     logs.ItemId = service.ServiceId;
                     logs.ItemName = service.Title;
@@ -86,40 +99,36 @@ namespace AdminPanelV1.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(int? id, Services service, HttpPostedFileBase ImgUrl)
+        public ActionResult Edit(int? id, Services service, HttpPostedFileBase imgUrl)
         {
-            
-            TablesLogs logs = new TablesLogs();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+          
 
             if (ModelState.IsValid)
             {
                 var serviceId = db.Services.Where(x => x.ServiceId == id).SingleOrDefault();
-                if (ImgUrl != null)
+                if (imgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(serviceId.ImgUrl)))
                     {
                         System.IO.File.Delete((Server.MapPath((serviceId.ImgUrl))));
                     }
 
-                    WebImage image = new WebImage(ImgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(ImgUrl.FileName);
 
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(750, 600);
-                    image.Save("~/Uploads/Service/" + imgName);
-
+                    string imgName = WebpImage(imgUrl, "Service");
                     serviceId.ImgUrl = "/Uploads/Service/" + imgName;
                 }
 
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+                
 
                 serviceId.Description = service.Description;
                 serviceId.Title = service.Title;
                 serviceId.Tag = service.Tag;
                 serviceId.EmendatorAdminId = userId;
-
                 db.SaveChanges();
+
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = serviceId.ServiceId;
                 logs.ItemName = service.Title;

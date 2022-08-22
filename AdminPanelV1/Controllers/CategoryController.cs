@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 using AdminPanelV1.Models;
 
@@ -13,6 +11,23 @@ namespace AdminPanelV1.Controllers
     public class CategoryController : Controller
     {
         AdminV1 db = new AdminV1();
+
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
 
         // GET: Category
         public ActionResult Index()
@@ -42,27 +57,19 @@ namespace AdminPanelV1.Controllers
             return View();
         }
 
-        // POST: Category/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl)
+        public ActionResult Create(Categories category, HttpPostedFileBase imgUrl)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
             var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
                 {
-                    //var userCookie = Request.Cookies["userCookie"];
+                    string imgName = WebpImage(imgUrl, "Category");
 
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/Category/" + imgName);
                     category.ImgUrl = "/Uploads/Category/" + imgName;
                     category.State = true;
                     category.UserId = userId;
@@ -89,6 +96,9 @@ namespace AdminPanelV1.Controllers
 
             return View(category);
         }
+
+      
+
         // GET: Category/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -110,7 +120,7 @@ namespace AdminPanelV1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryId,ParentId,CategoryName,Description,ImgUrl")] Categories category, HttpPostedFileBase imgUrl, int id)
+        public ActionResult Edit(Categories category, HttpPostedFileBase imgUrl, int id)
         {
             var categoryId = db.Categories.Where(x => x.CategoryId == id).SingleOrDefault();
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
@@ -125,34 +135,27 @@ namespace AdminPanelV1.Controllers
                         System.IO.File.Delete(Server.MapPath(categoryId.ImgUrl));
                     }
 
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/Category/" + imgName);
+                    string imgName = WebpImage(imgUrl, "Category");
 
                     categoryId.ImgUrl = "/Uploads/Category/" + imgName;
-
                     category.EmendatorAdminId = userId;
+                    categoryId.CategoryName = category.CategoryName;
+                    categoryId.Description = category.Description;
 
 
+                    //logs
+                    TablesLogs logs = new TablesLogs();
+                    logs.ItemId = category.CategoryId;
+                    logs.UserId = userId;
+                    logs.ItemName = category.CategoryName;
+                    logs.TableName = "Categories";
+                    logs.LogDate = DateTime.Now;
+                    logs.Process = category.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından güncellendi.";
+                    db.TablesLogs.Add(logs);
+                    db.SaveChanges();
 
                 }
-                categoryId.CategoryName = category.CategoryName;
-                categoryId.Description = category.Description;
-
-
-
-                TablesLogs logs = new TablesLogs();
-                logs.ItemId = category.CategoryId;
-                logs.UserId = userId;
-                logs.ItemName = category.CategoryName;
-                logs.TableName = "Categories";
-                logs.LogDate = DateTime.Now;
-                logs.Process = category.CategoryName + " " + "kategorisi" + " " + userName + " " + "tarafından güncellendi.";
-                db.TablesLogs.Add(logs);
-                db.SaveChanges();
+               
                 return RedirectToAction("Index");
             }
 

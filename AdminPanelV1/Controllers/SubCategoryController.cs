@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using AdminPanelV1.Models;
 
 namespace AdminPanelV1.Controllers
@@ -13,6 +14,24 @@ namespace AdminPanelV1.Controllers
     public class SubCategoryController : Controller
     {
         AdminV1 db = new AdminV1();
+
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
+
 
         // GET: SubCategory
         public ActionResult Index()
@@ -36,32 +55,27 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(SubCategories subCategory, HttpPostedFileBase imgUrl)
         {
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
            
-            TablesLogs logs = new TablesLogs();
 
             if (ModelState.IsValid)
             {
 
                 if (imgUrl != null)
                 {
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/SubCategory/" + imgName);
+                    string imgName = WebpImage(imgUrl, "SubCategory");
 
                     subCategory.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
 
-
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
-
+                subCategory.State = true;
                 subCategory.UserId= userId;
                 db.SubCategories.Add(subCategory);
                 db.SaveChanges();
 
+
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = subCategory.SubCategoryId;
                 logs.ItemName = subCategory.SubCategoryName;
@@ -101,8 +115,9 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SubCategoryId,CategoryId,SubCategoryName,ImgUrl")] SubCategories subCategory, HttpPostedFileBase imgUrl, int id)
         {
-            
-            TablesLogs logs = new TablesLogs();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
 
             var categoryId = db.SubCategories.Where(x => x.SubCategoryId == id).SingleOrDefault();
             if (ModelState.IsValid)
@@ -114,24 +129,18 @@ namespace AdminPanelV1.Controllers
                         System.IO.File.Delete(Server.MapPath(categoryId.ImgUrl));
                     }
 
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/SubCategory/" + imgName);
+                    string imgName = WebpImage(imgUrl, "SubCategory");
 
                     categoryId.ImgUrl = "/Uploads/SubCategory/" + imgName;
                 }
-
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
 
                 categoryId.SubCategoryName = subCategory.SubCategoryName;
                 categoryId.CategoryId = subCategory.CategoryId;
                 categoryId.EmendatorAdminId = userId;
                 db.SaveChanges();
 
+
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = subCategory.SubCategoryId;
                 logs.ItemName = subCategory.SubCategoryName;

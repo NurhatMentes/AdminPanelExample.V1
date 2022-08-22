@@ -1,18 +1,17 @@
 ﻿@{
- 
-    if (HttpContext.Current.User.Identity == null)
+
+    if (HttpContext.Current.User.Identity == null|| HttpContext.Current.User == null|| HttpContext.Current.User.Identity.Name == "")
     {
         Response.RedirectPermanent("/Users/Login");
     }
-}
 
-@{
     var userId = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[1];
     var email = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[0];
     var auth = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[2];
     var userName = System.Web.HttpContext.Current.User.Identity.Name.Split('|')[3];
 
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -93,8 +92,8 @@
 
 
                 @*@{
-                    Html.RenderAction("CommentPartial", "Users");
-                }*@
+                        Html.RenderAction("CommentPartial", "Users");
+                    }*@
 
 
                 <li class="nav-item dropdown pe-3">

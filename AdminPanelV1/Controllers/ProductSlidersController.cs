@@ -14,6 +14,23 @@ namespace AdminPanelV1.Controllers
     {
         AdminV1 db = new AdminV1();
 
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
+
         // GET: ProductSliders
         public ActionResult Index(int id)
         {
@@ -56,31 +73,28 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductSliders productSlider, HttpPostedFileBase imgUrl)
         {
-          
-            TablesLogs logs = new TablesLogs();
-
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
             int productId = productSlider.ProductId;
+
+
             if (ModelState.IsValid)
             {
+                if (imgUrl != null)
+                {
+                    string imgName = WebpImage(imgUrl, "ProductSlider");
+                    productSlider.ImgUrl = "/Uploads/ProductSlider/" + imgName;
 
-                WebImage image = new WebImage(imgUrl.InputStream);
-                FileInfo fileInfo = new FileInfo(imgUrl.FileName);
+                    productSlider.State = true;
+                    db.ProductSliders.Add(productSlider);
+                    db.SaveChanges();
+                }
 
-                string imgName = Guid.NewGuid() + fileInfo.Extension;
-                image.Resize(1024, 768);
-                image.Save("~/Uploads/ProductSlider/" + imgName);
 
-                productSlider.ImgUrl = "/Uploads/ProductSlider/" + imgName;
-
-                db.ProductSliders.Add(productSlider);
-                db.SaveChanges();
-
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
-
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = productId;
-                logs.ItemName = db.Products.FirstOrDefault(x=>x.ProductId==productId)?.Title;
+                logs.ItemName = db.Products.FirstOrDefault(x => x.ProductId == productId)?.Title;
                 logs.TableName = "ProductSliders";
                 logs.Process = db.Products.FirstOrDefault(x => x.ProductId == productId)?.Title + " " + "Ürünün resmi" + " " + userName + " " + "tarafından eklendi.";
                 logs.LogDate = DateTime.Now;
@@ -118,8 +132,9 @@ namespace AdminPanelV1.Controllers
         //değişken id olarak productId girildi böylece dropdown list içerisinden ürünün id'sini değişken olarak aldı.
         public ActionResult Edit([Bind(Include = "SliderId,ProductId,ImgUrl")] ProductSliders productSlider, HttpPostedFileBase imgUrl, int ProductId)
         {
-            
-            TablesLogs logs = new TablesLogs();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
 
             if (ModelState.IsValid)
             {
@@ -132,31 +147,25 @@ namespace AdminPanelV1.Controllers
                         System.IO.File.Delete(Server.MapPath(pSlider.ImgUrl));
                     }
 
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(1024, 768);
-                    image.Save("~/Uploads/ProductSlider/" + imgName);
-
+                    string imgName = WebpImage(imgUrl, "ProductSlider");
                     pSlider.ImgUrl = "/Uploads/ProductSlider/" + imgName;
+
+                    db.SaveChanges();
+
+
+
+                    TablesLogs logs = new TablesLogs();
+                    logs.UserId = userId;
+                    logs.ItemId = pSlider.SliderId;
+                    logs.ItemName = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title;
+                    logs.TableName = "ProductSliders";
+                    logs.Process = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title + " " + "Ürünün resmi" + " " + userName + " " + "tarafından güncellendi.";
+                    logs.LogDate = DateTime.Now;
+                    db.TablesLogs.Add(logs);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index/" + ProductId);
                 }
-
-                db.SaveChanges();
-
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
-
-                logs.UserId = userId;
-                logs.ItemId = pSlider.SliderId;
-                logs.ItemName = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title;
-                logs.TableName = "ProductSliders";
-                logs.Process = db.Products.FirstOrDefault(x => x.ProductId == pSlider.ProductId)?.Title + " " + "Ürünün resmi" + " " + userName + " " + "tarafından güncellendi.";
-                logs.LogDate = DateTime.Now;
-                db.TablesLogs.Add(logs);
-                db.SaveChanges();
-
-                return RedirectToAction("Index/" + ProductId);
             }
             ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Title", productSlider.ProductId);
             return View(productSlider);
@@ -197,7 +206,7 @@ namespace AdminPanelV1.Controllers
                 db.SaveChanges();
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+                var userName = HttpContext.User.Identity.Name.Split('|')[3];
 
                 TablesLogs logs = new TablesLogs();
 

@@ -17,12 +17,30 @@ namespace AdminPanelV1.Controllers
     {
         private AdminV1 db = new AdminV1();
 
+
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
+
         // GET: Products
         public ActionResult Index()
         {
             //...
             var products = db.Products.Include(p => p.Users).Include(p => p.Categories);
-            return View(products.Where(x=>x.State).OrderBy(x => x.ProductId).ToList());
+            return View(products.Where(x => x.State).OrderBy(x => x.ProductId).ToList());
         }
         //Methods
         private void Viewbags()
@@ -75,7 +93,7 @@ namespace AdminPanelV1.Controllers
             return View();
         }
 
-       
+
 
         // POST: Product/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -83,57 +101,53 @@ namespace AdminPanelV1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create( Products products, HttpPostedFileBase imgUrl, HttpPostedFileBase uploadFile)
+        public ActionResult Create(Products products, HttpPostedFileBase imgUrl, HttpPostedFileBase uploadFile)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-            var userName =HttpContext.User.Identity.Name.Split('|')[3];
-            TablesLogs logs = new TablesLogs();
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+          
 
-           
-                if (imgUrl != null)
+
+            if (imgUrl != null)
+            {
+                string imgName = WebpImage(imgUrl, "Product");
+                products.ImgUrl = "/Uploads/Product/" + imgName;
+
+                if (uploadFile != null)
                 {
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(1024, 460);
-                    image.Save("~/Uploads/Product/" + imgName);
-
-                    products.ImgUrl = "/Uploads/Product/" + imgName;
-
-                    if (uploadFile != null)
-                    {
-                        string fileName = Path.GetFileName(uploadFile.FileName);
-                        var filePath = Path.Combine(Server.MapPath("~/Uploads/Catalog/"), fileName);
-                        uploadFile.SaveAs(filePath);
-                        products.File = "/Uploads/Catalog/" + fileName;
-                    }
-
-                    products.OldPrice = 0;
-                    products.Date = DateTime.Now;
-                    products.UserId = userId;
-
-
-                    db.Products.Add(products);
-                    db.SaveChanges();
-
-                    logs.UserId = userId;
-                    logs.ItemId = products.ProductId;
-                    logs.ItemName = products.Title;
-                    logs.TableName = "Products";
-                    logs.Process = products.Title + " " + "Ürünü" + " " + userName + " " + "tarafından eklendi.";
-                    logs.LogDate = DateTime.Now;
-                    db.TablesLogs.Add(logs);
-                    db.SaveChanges();
-
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ViewBag.Warning = "Lütfen Resim Seçiniz";
+                    string fileName = Path.GetFileName(uploadFile.FileName);
+                    var filePath = Path.Combine(Server.MapPath("~/Uploads/Catalog/"), fileName);
+                    uploadFile.SaveAs(filePath);
+                    products.File = "/Uploads/Catalog/" + fileName;
                 }
 
-            
+                products.OldPrice = 0;
+                products.Date = DateTime.Now;
+                products.UserId = userId;
+
+
+                db.Products.Add(products);
+                db.SaveChanges();
+
+
+                TablesLogs logs = new TablesLogs();
+                logs.UserId = userId;
+                logs.ItemId = products.ProductId;
+                logs.ItemName = products.Title;
+                logs.TableName = "Products";
+                logs.Process = products.Title + " " + "Ürünü" + " " + userName + " " + "tarafından eklendi.";
+                logs.LogDate = DateTime.Now;
+                db.TablesLogs.Add(logs);
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.Warning = "Lütfen Resim Seçiniz";
+            }
+
+
 
             Viewbags();
             return View(products);
@@ -161,28 +175,23 @@ namespace AdminPanelV1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit(Products product, HttpPostedFileBase ImgUrl, int id, HttpPostedFileBase uploadFile)
+        public ActionResult Edit(Products product, HttpPostedFileBase imgUrl, int id, HttpPostedFileBase uploadFile)
         {
-            
-            TablesLogs logs = new TablesLogs();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
 
             if (ModelState.IsValid)
             {
                 var productId = db.Products.Where(x => x.ProductId == id).SingleOrDefault();
-                if (ImgUrl != null)
+
+                if (imgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(productId.ImgUrl)))
                     {
                         System.IO.File.Delete(Server.MapPath(productId.ImgUrl));
                     }
-
-                    WebImage image = new WebImage(ImgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(ImgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(1024, 460);
-                    image.Save("~/Uploads/Product/" + imgName);
-
+                    string imgName = WebpImage(imgUrl, "Product");
                     productId.ImgUrl = "/Uploads/Product/" + imgName;
                 }
 
@@ -220,8 +229,7 @@ namespace AdminPanelV1.Controllers
                     ViewBag.SubCategory = "Lütfen kategori seçiniz";
                 }
 
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+              
 
                 productId.OldPrice = productId.Price;
                 productId.Price = product.Price;
@@ -233,6 +241,7 @@ namespace AdminPanelV1.Controllers
                 db.SaveChanges();
 
 
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = productId.ProductId;
                 logs.ItemName = productId.Title;
@@ -283,7 +292,7 @@ namespace AdminPanelV1.Controllers
 
 
                 var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName =HttpContext.User.Identity.Name.Split('|')[3];
+                var userName = HttpContext.User.Identity.Name.Split('|')[3];
                 TablesLogs logs = new TablesLogs();
 
                 logs.UserId = userId;

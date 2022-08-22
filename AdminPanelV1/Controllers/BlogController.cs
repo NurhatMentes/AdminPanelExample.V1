@@ -14,6 +14,25 @@ namespace AdminPanelV1.Controllers
     public class BlogController : Controller
     {
         AdminV1 db = new AdminV1();
+
+        private string WebpImage(HttpPostedFileBase imgUrl, string fileName)
+        {
+            string[] allowedImageTypes = new string[] { "image/jpeg", "image/jpg", "image/png" };
+            if (allowedImageTypes.Contains(imgUrl.ContentType.ToLower()))
+            {
+                string normalImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), imgUrl.FileName);
+                string webPFileName = Path.GetFileNameWithoutExtension(imgUrl.FileName) + ".webp";
+                string webPImagePath = Path.Combine(Server.MapPath("~/Uploads/" + fileName), webPFileName);
+                imgUrl.SaveAs(normalImagePath);
+                var document = Aspose.Imaging.Image.Load(normalImagePath);
+                Aspose.Imaging.ImageOptions.WebPOptions options = new Aspose.Imaging.ImageOptions.WebPOptions();
+                document.Save(webPImagePath, options);
+                return webPFileName;
+            }
+            return null;
+        }
+
+
         // GET: Blog
         public ActionResult Index()
         {
@@ -57,39 +76,37 @@ namespace AdminPanelV1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Blogs blog, HttpPostedFileBase imgUrl)
         {
-            
-            TablesLogs logs = new TablesLogs();
+            var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
+            var userName = HttpContext.User.Identity.Name.Split('|')[3];
+
 
             if (ModelState.IsValid)
             {
                 if (imgUrl != null)
                 {
-                    WebImage image = new WebImage(imgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(imgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/Blog/" + imgName);
+                    string imgName = WebpImage(imgUrl, "Blog");
 
                     blog.ImgUrl = "/Uploads/Blog/" + imgName;
+                    blog.UserId = userId;
+                    blog.State = true;
+
+                    db.Blogs.Add(blog);
+                    db.SaveChanges();
+
+                    //logs
+                    TablesLogs logs = new TablesLogs();
+                    logs.UserId = userId;
+                    logs.ItemId = blog.BlogId;
+                    logs.ItemName = blog.Title;
+                    logs.TableName = "Blog";
+                    logs.Process = blog.Title + " " + "Bloğu" + " " + userName + " " + "tarafından eklendi.";
+                    logs.LogDate = DateTime.Now;
+                    db.TablesLogs.Add(logs);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
                 }
-
                 
-                var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
-                var userName = HttpContext.User.Identity.Name.Split('|')[3];
-                db.Blogs.Add(blog);
-                db.SaveChanges();
-
-                logs.UserId = userId;
-                logs.ItemId = blog.BlogId;
-                logs.ItemName = blog.Title;
-                logs.TableName = "Blog";
-                logs.Process = blog.Title + " " + "Bloğu" + " " + userName + " " + "tarafından eklendi.";
-                logs.LogDate = DateTime.Now;
-                db.TablesLogs.Add(logs);
-                db.SaveChanges();
-
-                return RedirectToAction("Index");
             }
 
             ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", blog.UserId);
@@ -118,28 +135,24 @@ namespace AdminPanelV1.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Blogs blog, int id, HttpPostedFileBase ImgUrl)
+        public ActionResult Edit(Blogs blog, int id, HttpPostedFileBase imgUrl)
         {
             var userId = Convert.ToInt16(HttpContext.User.Identity.Name.Split('|')[1]);
             var userName = HttpContext.User.Identity.Name.Split('|')[3];
-            TablesLogs logs = new TablesLogs();
+  
 
             if (ModelState.IsValid)
             {
                 var blogId = db.Blogs.Where(x => x.BlogId == id).SingleOrDefault();
-                if (ImgUrl != null)
+
+                if (imgUrl != null)
                 {
                     if (System.IO.File.Exists(Server.MapPath(blogId.ImgUrl)))
                     {
                         System.IO.File.Delete((Server.MapPath((blogId.ImgUrl))));
                     }
 
-                    WebImage image = new WebImage(ImgUrl.InputStream);
-                    FileInfo fileInfo = new FileInfo(ImgUrl.FileName);
-
-                    string imgName = Guid.NewGuid() + fileInfo.Extension;
-                    image.Resize(600, 400);
-                    image.Save("~/Uploads/Blog/" + imgName);
+                    string imgName = WebpImage(imgUrl, "Blog");
 
                     blogId.ImgUrl = "/Uploads/Blog/" + imgName;
                 }
@@ -166,7 +179,7 @@ namespace AdminPanelV1.Controllers
 
                 db.SaveChanges();
 
-
+                TablesLogs logs = new TablesLogs();
                 logs.UserId = userId;
                 logs.ItemId = blog.BlogId;
                 logs.ItemName = blog.Title;
