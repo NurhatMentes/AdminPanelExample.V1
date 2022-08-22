@@ -202,3 +202,12 @@
         </li>
     </ul>
 </li>
+
+<H3>🔗V1.2.2</H3>
+<li> Yöneticiler bölümü
+    <ul>
+        <li style="list-style-type: none;">
+            <p>➡İmage Upload sistemi güncellendi. Resimler artık webp formatında kaydediliyor.</p> 
+        </li>
+    </ul>
+</li>
