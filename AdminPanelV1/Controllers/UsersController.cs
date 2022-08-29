@@ -52,7 +52,9 @@ namespace AdminPanelV1.Controllers
             HttpCookie userCookie = new HttpCookie("userCookie");
             userCookie.Expires = DateTime.Now.AddMinutes(30);
             UserLogs adminLog = new UserLogs();
+            userCookie.Expires.AddMinutes(30);
 
+            
             try
             {
 
